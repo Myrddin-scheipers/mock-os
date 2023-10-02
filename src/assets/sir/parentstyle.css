@@ -1,0 +1,28 @@
+#window[data-window="sir"] {
+  width: auto;
+  min-width: 25vw;
+  max-width: 30vw;
+  max-height: 75vh;
+  background-color: rgba(255, 255, 255, 0.6);
+  border: 1px solid rgba(83, 83, 83, 0.6);
+  background: #03001e;
+  /* fallback for old browsers */
+  background: -webkit-radial-gradient(to right, #fdeff9, #ec38bc, #7303c0, #03001e);
+  /* Chrome 10-25, Safari 5.1-6 */
+  background: radial-gradient(to right, #fdeff9, #ec38bc, #7303c0, #03001e);
+  /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+  /* always needs to be there, this actually is important */
+  top: 40px;
+  right: 10px;
+  bottom: auto;
+  left: auto;
+  overflow: hidden;
+  height: 50vh;
+}
+#window[data-window="sir"] * {
+  color: #ffffff;
+}
+
+#window[data-window="sir"] .top_menu {
+  display: none;
+}

@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <div id="info">
+
+    </div>
+    <script>
+        navigator.connection.addEventListener('change', logNetworkInfo);
+        log = console.log;
+        let remindInTime = 10 // in seconds
+        /*
+        "bluetooth"
+        "cellular"
+        "ethernet"
+        "none"
+        "wifi"
+        "wimax"
+        "other"
+        "unknown"
+        */
+       try{
+        function alertontype() {
+            console.log("alerted #1");
+            types = ["cellular"];
+            if (types.includes(navigator.connection.type) || (navigator.connection.saveData && navigator.connection.type == "cellular")) {
+                // show warning? 
+                Notification.requestPermission().then(function (permission) {
+                    if(permission == "granted"){
+                        showNotification();
+                    }else{
+                        alert("no permissions to show notifications")
+                    }
+                });
+
+                // after x time?
+            } else {
+                log(navigator.connection.type)
+                // no problem here
+            }
+        }
+        
+        function showNotification() {
+            console.log("alerted #2");
+
+                    let title = "stil on "+navigator.connection.type;
+                    let icon = 'https://homepages.cae.wisc.edu/~ece533/images/airplane.png';
+                    let body = "you indicated to turn on warnings when on " + navigator.connection.type + " every " + remindInTime + " seconds";
+                    var notification = new Notification(title, { body, icon });
+                    notification.onclick = () => {
+                        notification.close();
+                        window.parent.focus();
+                    }
+                }
+        function logNetworkInfo() {
+            // Network type that browser uses
+            log('         type: ' + navigator.connection.type);
+
+            // Effective bandwidth estimate
+            log('     downlink: ' + navigator.connection.downlink + ' Mb/s');
+
+            // Effective round-trip time estimate
+            log('          rtt: ' + navigator.connection.rtt + ' ms');
+
+            // Upper bound on the downlink speed of the first network hop
+            log('  downlinkMax: ' + navigator.connection.downlinkMax + ' Mb/s');
+
+            // Effective connection type determined using a combination of recently
+            // observed rtt and downlink values: ' +
+            log('effectiveType: ' + navigator.connection.effectiveType);
+
+            // True if the user has requested a reduced data usage mode from the user
+            // agent.
+            log('     saveData: ' + navigator.connection.saveData);
+
+            // Add whitespace for readability
+            log('');
+        }
+
+        logNetworkInfo();
+        alertontype();
+        setInterval(() => {
+            alertontype()
+        }, remindInTime * 1000);
+    }catch(e){
+        console.log(e)
+    }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,117 @@
+{
+    "safeari": {
+        "open_ext": [],
+        "source": "https://bing.com",
+        "url": "https://bing.com",
+        "title": "safeari",
+        "desc": "BiNg SeArCh BcS iT iS gOoD",
+        "specialsize": false
+    },
+    "icould": {
+        "open_ext": [],
+        "source": "./assets/frames/icould/login.html",
+        "url": "https://www.icloud.com/",
+        "title": "Icould",
+        "desc": "Could i?",
+        "specialsize": false
+    },
+    "mapple apps": {
+        "open_ext": [],
+        "source": "https://www.google.com/maps/embed/v1/view?key=AIzaSyA1Vf45Wr0eyIUAhNrqjezMEW82fhBRDIA&center=43.723205,10.39469&zoom=18&maptype=satellite",
+        "url": "https://www.google.com/maps/embed/v1/view?key=AIzaSyA1Vf45Wr0eyIUAhNrqjezMEW82fhBRDIA&center=43.723205,10.39469&zoom=18&maptype=satellite",
+        "title": "Mapple Apps",
+        "desc": "Better ways ahead with google maps.",
+        "specialsize": false
+    },
+    "cripple music": {
+        "open_ext": [],
+        "source": "./assets/frames/cripple_music/cripple_music.html",
+        "url": "https://www.apple.com/benl/apple-music/",
+        "title": "Cripple Music",
+        "desc": "Lose yourself in 50 million songs",
+        "specialsize": false
+    },
+    "statsfm": {
+        "open_ext": [],
+        "source": "https://stats.fm/",
+        "url": "https://stats.fm/",
+        "title": "Stats.fm",
+        "desc": "Your music, your stats, your story.",
+        "specialsize": false
+    },
+    "rocks star": {
+        "open_ext": [],
+        "source": "https://www.rockstargames.com/",
+        "url": "https://www.rockstargames.com/",
+        "title": "rocks star launcher",
+        "desc": "Killing dreams. Murdering hope. Fighting the righteous. Bullying the weak.",
+        "specialsize": false
+    },
+    "sir": {
+        "open_ext": [],
+        "source": "./assets/sir/index.html",
+        "url": "https://www.apple.com/siri/",
+        "title": "sir asistant",
+        "desc": "Useless here =)",
+        "specialsize": true,
+        "styleurl": "./assets/sir/parentstyle.css"
+    },
+    "notflix": {
+        "open_ext": [],
+        "source": "./assets/frames/notflix/index.html",
+        "url": "https://www.netflix.com/",
+        "title": "notflix",
+        "desc": "not netflix based ~_~",
+        "specialsize": false
+    },
+    "lens": {
+        "open_ext": [],
+        "source": "./assets/frames/camera/index.php",
+        "url": "about:blank",
+        "title": "Lens",
+        "desc": "I'm watching you :-)",
+        "specialsize": false
+    },
+    "finder": {
+        "open_ext": [],
+        "source": "./assets/frames/finder/index.php",
+        "url": "https://www.apple.com/macos/ventura/",
+        "title": "Finder",
+        "desc": "What About you find some bitches"
+    },
+    "notechad": {
+        "open_ext": [],
+        "source": "./assets/frames/notechad/index.html",
+        "url": "about:blank",
+        "title": "NoteChad",
+        "desc": "keeps note of your notes with a chad"
+    },
+    "file reader": {
+        "open_ext":  ["png", "jpg", "ico", "html", "php", "css"],
+        "source": "./_php/openfile.php",
+        "url": "about:blank",
+        "title": "File reader",
+        "desc": "file opener"
+    },
+    "file editor": {
+        "open_ext":  ["html", "css", "php", "ico"],
+        "source": "./_php/editfile.php",
+        "url": "about:blank",
+        "title": "File editor",
+        "desc": "bewerk bestanden"
+    },
+    "folder reader": {
+        "open_ext": [],
+        "source": "./files.php",
+        "url": "about:blank",
+        "title": "Finder",
+        "desc": "find files"
+    },
+    "about": {
+        "open_ext": [],
+        "source": "./assets/frames/about/index.html",
+        "url": "about:blank",
+        "title": "Finder",
+        "desc": "find files"
+    }
+}

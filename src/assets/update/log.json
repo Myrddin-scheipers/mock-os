@@ -1,0 +1,33 @@
+{
+    "0.11": {
+        "fix": [],
+        "added": ["version history"],
+        "removed": []
+    },
+    "0.12": {
+        "fix": [],
+        "added": ["update logs", "Alt + S as shortcut for taking a screenshot"],
+        "removed": ["not working screenshot shortcut"]
+    },
+    "0.13": {
+        "fix": ["moved partially to object oriented code"],
+        "added": ["merged to a database of apps instead of a plain file", "bugs file"],
+        "removed": ["plain json file of the apps"]
+    },
+    "0.14": {
+        "fix": ["exploring folders works in all levels"],
+        "added": ["customizable toolbar"],
+        "removed": []
+    },
+    "0.15": {
+        "fix": ["exploring folders fixed again", "main page dont display errors"],
+        "added": ["intended things that can be considered bugs are now in the bugs file", "reset buttons of system filters", "context menu should work in all apps that include the file context.html", "todo in log history", "restart button when clicking the mock logo"],
+        "removed": [],
+        "todo": ["app store", "make orange minimize button work", "logo in top menu on click shutdown, logout, ..."]
+    },
+    "0.16": {
+        "fix": ["some z-index issues"],
+        "added": [],
+        "removed": []
+    }
+}

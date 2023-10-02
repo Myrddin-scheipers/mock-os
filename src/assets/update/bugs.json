@@ -1,0 +1,12 @@
+{
+    "0.13": {
+        "bug": ["folders dont allow depth > 2"]
+    },
+    "0.14": {
+        "bug": ["some apps dont have working images"]
+    },
+    "0.15": {
+        "bug": ["top menu dropdowns dont show above an app"],
+        "intended": []
+    }
+}

@@ -1,0 +1,197 @@
+body,
+*,
+iframe, .top_menu .actions *,.top_menu .actions {
+    cursor: url(./assets/cursors/left_ptr.svg), default;
+}
+a, a *, .dropdown, .dropdown *, .menu-ico, .menu-ico *, .dock-container ul *{
+    cursor: url(./assets/cursors/grab_point.png), default;
+}
+.top_menu, .top_menu *{
+    cursor: url(./assets/cursors/grab.png), auto;
+}
+.loading, .loading * {
+    cursor: url(./assets/cursors/wait_19.svg), auto;
+    -webkit-animation: cursor 400ms infinite;
+    animation: cursor 400ms infinite;
+}
+.top_menu:active, .top_menu *:active,
+.top_menu:target, .top_menu *:target {
+    cursor: url(./assets/cursors/grab_closed.png), grabbing !important;
+}
+.pointer, .pointer *{
+    cursor: url(./assets/cursors/grab_point.png), default !important;
+}
+.grab, .grab * {
+    cursor: url(./assets/cursors/grab_closed.png), grabbing !important;
+}
+@-webkit-keyframes cursor {
+    0% {
+        cursor: url(./assets/cursors/wait_20.svg), auto;
+    }
+
+    5% {
+        cursor: url(./assets/cursors/wait.svg), auto;
+    }
+
+    10% {
+        cursor: url(./assets/cursors/wait_1.svg), auto;
+    }
+
+    15% {
+        cursor: url(./assets/cursors/wait_2.svg), auto;
+    }
+
+    20% {
+        cursor: url(./assets/cursors/wait_3.svg), auto;
+    }
+
+    25% {
+        cursor: url(./assets/cursors/wait_4.svg), auto;
+    }
+
+    30% {
+        cursor: url(./assets/cursors/wait_5.svg), auto;
+    }
+
+    35% {
+        cursor: url(./assets/cursors/wait_6.svg), auto;
+    }
+
+    40% {
+        cursor: url(./assets/cursors/wait_7.svg), auto;
+    }
+
+    45% {
+        cursor: url(./assets/cursors/wait_8.svg), auto;
+    }
+
+    50% {
+        cursor: url(./assets/cursors/wait_9.svg), auto;
+    }
+
+    55% {
+        cursor: url(./assets/cursors/wait_10.svg), auto;
+    }
+
+    60% {
+        cursor: url(./assets/cursors/wait_10.svg), auto;
+    }
+
+    65% {
+        cursor: url(./assets/cursors/wait_11.svg), auto;
+    }
+
+    70% {
+        cursor: url(./assets/cursors/wait_12.svg), auto;
+    }
+
+    75% {
+        cursor: url(./assets/cursors/wait_13.svg), auto;
+    }
+
+    80% {
+        cursor: url(./assets/cursors/wait_14.svg), auto;
+    }
+
+    85% {
+        cursor: url(./assets/cursors/wait_15.svg), auto;
+    }
+
+    90% {
+        cursor: url(./assets/cursors/wait_16.svg), auto;
+    }
+
+    95% {
+        cursor: url(./assets/cursors/wait_17.svg), auto;
+    }
+
+    100% {
+        cursor: url(./assets/cursors/wait_18.svg), auto;
+    }
+}
+
+@keyframes cursor {
+    0% {
+        cursor: url(./assets/cursors/wait_20.svg), auto;
+    }
+
+    5% {
+        cursor: url(./assets/cursors/wait.svg), auto;
+    }
+
+    10% {
+        cursor: url(./assets/cursors/wait_1.svg), auto;
+    }
+
+    15% {
+        cursor: url(./assets/cursors/wait_2.svg), auto;
+    }
+
+    20% {
+        cursor: url(./assets/cursors/wait_3.svg), auto;
+    }
+
+    25% {
+        cursor: url(./assets/cursors/wait_4.svg), auto;
+    }
+
+    30% {
+        cursor: url(./assets/cursors/wait_5.svg), auto;
+    }
+
+    35% {
+        cursor: url(./assets/cursors/wait_6.svg), auto;
+    }
+
+    40% {
+        cursor: url(./assets/cursors/wait_7.svg), auto;
+    }
+
+    45% {
+        cursor: url(./assets/cursors/wait_8.svg), auto;
+    }
+
+    50% {
+        cursor: url(./assets/cursors/wait_9.svg), auto;
+    }
+
+    55% {
+        cursor: url(./assets/cursors/wait_10.svg), auto;
+    }
+
+    60% {
+        cursor: url(./assets/cursors/wait_10.svg), auto;
+    }
+
+    65% {
+        cursor: url(./assets/cursors/wait_11.svg), auto;
+    }
+
+    70% {
+        cursor: url(./assets/cursors/wait_12.svg), auto;
+    }
+
+    75% {
+        cursor: url(./assets/cursors/wait_13.svg), auto;
+    }
+
+    80% {
+        cursor: url(./assets/cursors/wait_14.svg), auto;
+    }
+
+    85% {
+        cursor: url(./assets/cursors/wait_15.svg), auto;
+    }
+
+    90% {
+        cursor: url(./assets/cursors/wait_16.svg), auto;
+    }
+
+    95% {
+        cursor: url(./assets/cursors/wait_17.svg), auto;
+    }
+
+    100% {
+        cursor: url(./assets/cursors/wait_18.svg), auto;
+    }
+}

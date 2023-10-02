@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<title>Notechad</title>
+
+	<link rel="stylesheet" href="css/reset.css" media="all">
+	<link rel="stylesheet" href="css/foundation.min.css" media="all">
+	<link rel="stylesheet" href="css/todo.css" media="all">
+
+</head>
+
+<body>
+
+
+
+	<div class="row">
+		<div class="eight columns">
+			<h2 id="counter"><span>0</span> to do items</h2>
+		</div>
+	</div>
+
+	<form>
+		<div class="row">
+			<div class="six columns">
+				<h3>To Do <button class="btn btn-more">+</button></h3>
+				<div class="addtask hidden">
+					<label for="todo">Enter a task</label>
+					<input id="todo" type="text" placeholder="new todo item">
+					<button>add task</button>
+					<button class="btn-close btn">x</button>
+				</div>
+				<ul id="tasks">
+				</ul>
+			</div>
+			<input type="button" id="btnComplete" value="Mark as done" />
+			<div class="six columns">
+				<h3>Done</h3>
+				<ul id="done"></ul>
+			</div>
+		</div>
+
+	</form>
+
+
+	<script src="js/interaction.js"></script>
+
+</body>
+
+</html>
