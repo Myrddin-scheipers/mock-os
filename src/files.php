@@ -8,8 +8,12 @@
   } else {
     $path = "./";
   }
+  function filter($var){
+    return filter_var($var, FILTER_SANITIZE_URL);
+}
  $path = ltrim($path, '/');
   $path = $path . "/";
+  $path = filter($path);
   $files = scandir($path);
   $text_ext = ["html", "css", "js", "php", "txt"];
   $image_ext = ["jpg", "jpeg", "png", "ico"];

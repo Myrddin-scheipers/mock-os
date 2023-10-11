@@ -26,6 +26,7 @@
     $file = "../" . $filename;
     $ext = pathinfo($file, PATHINFO_EXTENSION);
     $file_url = $root . $filename;
+    $file_url = filter_var($file_url, FILTER_SANITIZE_URL);
     $options = stream_context_create(array(
         "ssl" => array(
             "verify_peer" => false,

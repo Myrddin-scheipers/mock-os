@@ -1,9 +1,9 @@
 let dblclicktime = 800;
 window.addEventListener("load", this.focus());
 function replaceTag(target, changeto) {
-  var that = target;
+  let that = target;
 
-  var newtag = document.createElement(changeto);
+  let newtag = document.createElement(changeto);
   if (changeto == 'input') {
     newtag.setAttribute('value', that.innerHTML);
   }
@@ -79,6 +79,9 @@ function singleclick(e) {
 }
 let applist = document.querySelector(".openwith")
 function resetfiles() {
+  while(document.querySelector(".dropdown input:checked")){
+    document.querySelector(".dropdown input:checked").checked = false;
+  }
   while (document.querySelector(".files input")) {
     replaceTag(document.querySelector(".files input"), "p");
   }
@@ -100,33 +103,42 @@ function resetfiles() {
 }
 
 function tap(e) {
+  // check if tapped same element as last time
   if (e.target != lastclickedelem) {
+    // clicked diffrent element
     lastclickedelem = e.target;
     doubletapTimer = null;
   }
   if (e.target.closest(".group") == undefined) {
+    // not clicked on a file
     resetfiles();
     return;
   }
   if (e.target.closest(".group").querySelector("input")) {
+    //clicked on an input (when renaming)
     return;
   }
   if (!e.target.closest(".group").classList.contains("selected")) {
+    // when your files are not selected already (click on diffrent file)
     resetfiles();
   }
   if (doubletapTimer == null) {
-    // check already clicked that element once
+    // clicked more then 1 sec ago on a file or not clicked at all
     if (document.querySelector(".files .selected") != e.target.closest(".group")) {
       // First tap, we wait X ms to the second tap
       doubletapTimer = setTimeout(function () {
+        // idk what this does 
+        // should just set active does in testing but idk in code
         singleclick(e);
       }, dblclicktime);
     } else {
-      // skip the wait if already clicked before -> option 3
+      // clicked more then 1 sec ago
+      // rename file
       singleclick(e);
     }
   } else {
-    // Second tap
+    // double tap withing dblclicktime
+    // open the file
     clearTimeout(doubletapTimer);
     openfile(e);
     doubletapTimer = null;
@@ -294,4 +306,71 @@ function filecountchange(e) {
   value = e.value;
   value = Math.abs(value) / 10;
   document.querySelector(':root').style.setProperty('--file-columns', value);
+  settings.files.size = value;
 }
+
+
+document.addEventListener('DOMContentLoaded', (event) => {
+  let dragSrcEl = null;
+  
+  function handleDragStart(e) {
+    resetfiles();
+    this.style.opacity = '0.4';
+    
+    dragSrcEl = this;
+    e.dataTransfer.effectAllowed = 'move';
+    e.dataTransfer.setData('text/html', this.innerHTML);
+  }
+
+  function handleDragOver(e) {
+    if (e.preventDefault) {
+      e.preventDefault();
+    }
+    e.dataTransfer.dropEffect = 'move';
+    
+    return false;
+  }
+
+  function handleDragEnter(e) {
+    if (dragSrcEl.closest(".group") != this.closest(".group")) {
+      this.closest(".group").classList.add('selected');
+    }
+  }
+
+  function handleDragLeave(e) {
+    if(e.target != this.closest(".group")){
+      resetfiles();
+    }
+  }
+
+  function handleDrop(e) {
+    if (e.stopPropagation) {
+      e.stopPropagation(); // stops the browser from redirecting.
+    }
+    
+    if (dragSrcEl.closest(".group") != this.closest(".group")) {
+      dragSrcEl.innerHTML = this.closest(".group").innerHTML;
+      this.closest(".group").innerHTML = e.dataTransfer.getData('text/html');
+    }
+    return false;
+  }
+
+  function handleDragEnd(e) {
+    this.style.opacity = '1';
+    
+    items.forEach(function (item) {
+      item.classList.remove('over');
+    });
+  }
+  
+  
+  let items = document.querySelectorAll('.files .group');
+  items.forEach(function(item) {
+    item.addEventListener('dragstart', handleDragStart, true);
+    item.addEventListener('dragover', handleDragOver, true);
+    item.addEventListener('dragleave', handleDragLeave, true);
+    item.addEventListener('dragenter', handleDragEnter, true);
+    item.addEventListener('drop', handleDrop, true);
+    item.addEventListener('dragend', handleDragEnd, true);
+  });
+});

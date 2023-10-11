@@ -32,12 +32,19 @@ function query($sql)
 <?php
 if (isset($_GET["name"])) {
     $a = urldecode($_GET["name"]);
+    $a = filter_var($a, FILTER_SANITIZE_URL);
     $b = urldecode($_GET["ext"]);
+    $b = filter_var($b, FILTER_SANITIZE_URL);
     $c = urldecode($_GET["src"]);
+    $c = filter_var($c, FILTER_SANITIZE_URL);
     $d = urldecode($_GET["ref"]);
+    $d = filter_var($d, FILTER_SANITIZE_URL);
     $e = urldecode($_GET["title"]);
+    $e = filter_var($e, FILTER_SANITIZE_URL);
     $f = urldecode($_GET["desc"]);
+    $f = filter_var($f, FILTER_SANITIZE_URL);
     $g = urldecode($_GET["dev"]);
+    $g = filter_var($g, FILTER_SANITIZE_URL);
     if(isset($a) && isset($b) && isset($c) && isset($d) && isset($e) && isset($f) && isset($g)){
         searchQuery($a, $b, $c, $d, $e, $f, $g, false);
     }

@@ -1,7 +1,7 @@
 <div class="menu first">
     <ul class="menu-list">
         <li class="menu-item">
-            <button class="menu-button">
+            <button class="menu-button disabled">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                     class="bi bi-arrow-counterclockwise" viewBox="0 0 16 16">
                     <path fill-rule="evenodd" d="M8 3a5 5 0 1 1-4.546 2.914.5.5 0 0 0-.908-.417A6 6 0 1 0 8 2v1z" />
@@ -15,7 +15,7 @@
     </ul>
     <ul class="menu-list">
         <li class="menu-item">
-            <button class="menu-button">
+            <button class="menu-button disabled">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                     class="bi bi-folder-plus" viewBox="0 0 16 16">
                     <path
@@ -28,7 +28,7 @@
             </button>
         </li>
         <li class="menu-item">
-            <button class="menu-button">
+            <button class="menu-button disabled">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                     class="bi bi-file-earmark-plus" viewBox="0 0 16 16">
                     <path
@@ -41,7 +41,7 @@
             </button>
         </li>
         <li class="menu-item">
-            <button class="menu-button">
+            <button class="menu-button disabled">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                     class="bi bi-textarea-resize" viewBox="0 0 16 16">
                     <path
@@ -52,14 +52,14 @@
             </button>
         </li>
         <li class="menu-item">
-            <button class="menu-button">
+            <button class="menu-button disabled">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                     class="bi bi-sliders2" viewBox="0 0 16 16">
                     <path fill-rule="evenodd"
                         d="M10.5 1a.5.5 0 0 1 .5.5v4a.5.5 0 0 1-1 0V4H1.5a.5.5 0 0 1 0-1H10V1.5a.5.5 0 0 1 .5-.5ZM12 3.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5Zm-6.5 2A.5.5 0 0 1 6 6v1.5h8.5a.5.5 0 0 1 0 1H6V10a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5ZM1 8a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2A.5.5 0 0 1 1 8Zm9.5 2a.5.5 0 0 1 .5.5v4a.5.5 0 0 1-1 0V13H1.5a.5.5 0 0 1 0-1H10v-1.5a.5.5 0 0 1 .5-.5Zm1.5 2.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5Z" />
                 </svg>
-                <span>Settings </span>
-                <span>CTRL+V</span>
+                <span>Settings</span>
+                <span class="disabled">CTRL+V</span>
             </button>
         </li>
     </ul>
@@ -73,8 +73,6 @@
         </li>
     </ul>
 </div>
-
-
 <div class="menu context_window">
     <ul class="menu-list">
         <li class="menu-item">
@@ -92,7 +90,8 @@
     </ul>
     <ul class="menu-list">
         <li class="menu-item">
-            <button onclick='desktop.fullscreen_page(document.querySelector(".window.active iframe"))' class="menu-button">
+            <button onclick='appwindow.fullscreen(document.querySelector(".window.active"))'
+                class="menu-button">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                     class="bi bi-folder-plus" viewBox="0 0 16 16">
                     <path
@@ -105,7 +104,7 @@
             </button>
         </li>
         <li class="menu-item">
-            <button class="menu-button">
+            <button class="menu-button disabled">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                     class="bi bi-file-earmark-plus" viewBox="0 0 16 16">
                     <path
@@ -118,7 +117,7 @@
             </button>
         </li>
         <li class="menu-item">
-            <button class="menu-button">
+            <button class="menu-button disabled">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                     class="bi bi-textarea-resize" viewBox="0 0 16 16">
                     <path
@@ -129,20 +128,20 @@
             </button>
         </li>
         <li class="menu-item">
-            <button class="menu-button">
+            <button onclick="openapp('settings', false)" class="menu-button">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                     class="bi bi-sliders2" viewBox="0 0 16 16">
                     <path fill-rule="evenodd"
                         d="M10.5 1a.5.5 0 0 1 .5.5v4a.5.5 0 0 1-1 0V4H1.5a.5.5 0 0 1 0-1H10V1.5a.5.5 0 0 1 .5-.5ZM12 3.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5Zm-6.5 2A.5.5 0 0 1 6 6v1.5h8.5a.5.5 0 0 1 0 1H6V10a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5ZM1 8a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2A.5.5 0 0 1 1 8Zm9.5 2a.5.5 0 0 1 .5.5v4a.5.5 0 0 1-1 0V13H1.5a.5.5 0 0 1 0-1H10v-1.5a.5.5 0 0 1 .5-.5Zm1.5 2.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5Z" />
                 </svg>
-                <span>Settings </span>
-                <span>CTRL+V</span>
+                <span>Settings</span>
+                <span class="disabled">CTRL+V</span>
             </button>
         </li>
     </ul>
     <ul class="menu-list">
         <li class="menu-item">
-            <button class="menu-button">
+            <button class="menu-button disabled">
                 <svg></svg>
                 <span>Select All</span>
                 <span>CTRL+A</span>
@@ -154,20 +153,6 @@
 <div class="menu context_files">
     <ul class="menu-list">
         <li class="menu-item">
-            <button onclick="backgroundinput.click()" class="menu-button">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                    class="bi bi-arrow-counterclockwise" viewBox="0 0 16 16">
-                    <path fill-rule="evenodd" d="M8 3a5 5 0 1 1-4.546 2.914.5.5 0 0 0-.908-.417A6 6 0 1 0 8 2v1z" />
-                    <path
-                        d="M8 4.466V.534a.25.25 0 0 0-.41-.192L5.23 2.308a.25.25 0 0 0 0 .384l2.36 1.966A.25.25 0 0 0 8 4.466z" />
-                </svg>
-                <span>Change Background</span>
-                <span>CTRL+:</span>
-            </button>
-        </li>
-    </ul>
-    <ul class="menu-list">
-        <li class="menu-item">
             <button class="menu-button renamebutton">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                     class="bi bi-arrow-counterclockwise" viewBox="0 0 16 16">
@@ -176,6 +161,17 @@
                         d="M8 4.466V.534a.25.25 0 0 0-.41-.192L5.23 2.308a.25.25 0 0 0 0 .384l2.36 1.966A.25.25 0 0 0 8 4.466z" />
                 </svg>
                 <span>Rename</span>
+                <span>test</span>
+            </button>
+        </li>
+        <li class="menu-item">
+            <button class="menu-button disabled">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                    class="bi bi-textarea-resize" viewBox="0 0 16 16">
+                    <path
+                        d="M0 4.5A2.5 2.5 0 0 1 2.5 2h11A2.5 2.5 0 0 1 16 4.5v7a2.5 2.5 0 0 1-2.5 2.5h-11A2.5 2.5 0 0 1 0 11.5v-7zM2.5 3A1.5 1.5 0 0 0 1 4.5v7A1.5 1.5 0 0 0 2.5 13h11a1.5 1.5 0 0 0 1.5-1.5v-7A1.5 1.5 0 0 0 13.5 3h-11zm10.854 4.646a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708-.708l3-3a.5.5 0 0 1 .708 0zm0 2.5a.5.5 0 0 1 0 .708l-.5.5a.5.5 0 0 1-.708-.708l.5-.5a.5.5 0 0 1 .708 0z" />
+                </svg>
+                <span>Info</span>
                 <span></span>
             </button>
         </li>
@@ -192,17 +188,9 @@
                 <span>CTRL+click</span>
             </button>
         </li>
-        <li class="menu-item">
-            <button class="menu-button">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                    class="bi bi-textarea-resize" viewBox="0 0 16 16">
-                    <path
-                        d="M0 4.5A2.5 2.5 0 0 1 2.5 2h11A2.5 2.5 0 0 1 16 4.5v7a2.5 2.5 0 0 1-2.5 2.5h-11A2.5 2.5 0 0 1 0 11.5v-7zM2.5 3A1.5 1.5 0 0 0 1 4.5v7A1.5 1.5 0 0 0 2.5 13h11a1.5 1.5 0 0 0 1.5-1.5v-7A1.5 1.5 0 0 0 13.5 3h-11zm10.854 4.646a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708-.708l3-3a.5.5 0 0 1 .708 0zm0 2.5a.5.5 0 0 1 0 .708l-.5.5a.5.5 0 0 1-.708-.708l.5-.5a.5.5 0 0 1 .708 0z" />
-                </svg>
-                <span>Select files </span>
-                <span>CTRL+</span>
-            </button>
-        </li>
+    </ul>
+    <ul class="menu-list">
+
         <li class="menu-item">
             <button class="menu-button">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
@@ -210,14 +198,26 @@
                     <path fill-rule="evenodd"
                         d="M10.5 1a.5.5 0 0 1 .5.5v4a.5.5 0 0 1-1 0V4H1.5a.5.5 0 0 1 0-1H10V1.5a.5.5 0 0 1 .5-.5ZM12 3.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5Zm-6.5 2A.5.5 0 0 1 6 6v1.5h8.5a.5.5 0 0 1 0 1H6V10a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5ZM1 8a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2A.5.5 0 0 1 1 8Zm9.5 2a.5.5 0 0 1 .5.5v4a.5.5 0 0 1-1 0V13H1.5a.5.5 0 0 1 0-1H10v-1.5a.5.5 0 0 1 .5-.5Zm1.5 2.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5Z" />
                 </svg>
-                <span>Settings </span>
+                <span>Settings</span>
                 <span>CTRL+V</span>
+            </button>
+        </li>
+        <li class="menu-item">
+            <button onclick="desktop.showFilepicker()" class="menu-button">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                    class="bi bi-arrow-counterclockwise" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M8 3a5 5 0 1 1-4.546 2.914.5.5 0 0 0-.908-.417A6 6 0 1 0 8 2v1z" />
+                    <path
+                        d="M8 4.466V.534a.25.25 0 0 0-.41-.192L5.23 2.308a.25.25 0 0 0 0 .384l2.36 1.966A.25.25 0 0 0 8 4.466z" />
+                </svg>
+                <span>Change Background</span>
+                <span>CTRL+B</span>
             </button>
         </li>
     </ul>
     <ul class="menu-list">
         <li class="menu-item">
-            <button class="menu-button">
+            <button class="menu-button disabled">
                 <svg></svg>
                 <span>Select All</span>
                 <span>CTRL+A</span>
@@ -280,16 +280,14 @@
         if (document.body.clientHeight < context.childNodes[0].parentNode.clientHeight + event.clientY) {
             y = y - context.childNodes[0].parentNode.clientHeight;
         }
+        if (document.body.clientWidth < context.childNodes[0].parentNode.clientWidth + event.clientX) {
+            x = x - context.childNodes[0].parentNode.clientWidth;
+        }
         context.style.left = `${x}px`;
         context.style.top = `${y}px`;
     }
 </script>
 <style>
-    :root {
-        --color-bg-primary-offset: #eee;
-        --color-bg-secondary: #fff;
-    }
-
     .menu {
         height: auto;
         z-index: 148;
@@ -297,13 +295,14 @@
         position: absolute;
         flex-direction: column;
         background-color: var(--color-bg-secondary);
-          border-radius: var(--radius);
+        border-radius: var(--radius);
         box-shadow: 0 10px 20px rgba(64, 64, 64, 0.15);
         top: 10px;
         left: 10px;
         width: 208px;
 
     }
+
     .menu-list+.menu-list {
         border-top: 1px solid #ddd;
     }
@@ -320,7 +319,7 @@
         padding: 8px 8px;
         width: 100%;
 
-          border-radius: var(--radius);
+        border-radius: var(--radius);
         display: flex;
         align-items: center;
         position: relative;
@@ -379,6 +378,7 @@
     ul {
         list-style-type: none;
     }
+
     .menu-item {
         position: relative;
     }
@@ -391,7 +391,7 @@
         padding: 8px 8px;
         width: 100%;
 
-          border-radius: var(--radius);
+        border-radius: var(--radius);
         display: flex;
         align-items: center;
         position: relative;

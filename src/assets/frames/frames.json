@@ -86,20 +86,6 @@
         "title": "NoteChad",
         "desc": "keeps note of your notes with a chad"
     },
-    "file reader": {
-        "open_ext":  ["png", "jpg", "ico", "html", "php", "css"],
-        "source": "./_php/openfile.php",
-        "url": "about:blank",
-        "title": "File reader",
-        "desc": "file opener"
-    },
-    "file editor": {
-        "open_ext":  ["html", "css", "php", "ico"],
-        "source": "./_php/editfile.php",
-        "url": "about:blank",
-        "title": "File editor",
-        "desc": "bewerk bestanden"
-    },
     "folder reader": {
         "open_ext": [],
         "source": "./files.php",

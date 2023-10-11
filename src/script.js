@@ -5,7 +5,6 @@ let title;
 let batteryelem;
 let loader;
 let data;
-let movetoelem;
 let version = 0.16;
 const disabled = {
   sleepmode: false,
@@ -14,28 +13,44 @@ const disabled = {
   files: false,
   apps: false,
 };
-if (location.protocol !== 'https:') {
-  location.replace(`https:${location.href.substring(location.protocol.length)}`);
+if ("mediaSession" in navigator) {
+  navigator.mediaSession.metadata = new MediaMetadata({
+    title: "nom nom",
+    artist: "mier",
+    album: "The Ultimate Collection (Remastered)",
+    artwork: [
+      {
+        src: "./favicon.ico",
+        sizes: "500x500",
+        type: "image/ico",
+      },
+    ],
+  });
 }
-function eraseCookie(name) {   
-  document.cookie = name+'=; Max-Age=-99999999;';  
+if (location.protocol !== "https:") {
+  location.replace(
+    `https:${location.href.substring(location.protocol.length)}`
+  );
 }
-function resetsystem(){
+function eraseCookie(name) {
+  document.cookie = name + "=; Max-Age=-99999999;";
+}
+function resetsystem() {
   system = true;
-  if(system){
+  if (system) {
     let loader = document.querySelector(".loader");
     loader.style.display = "flex";
     loader.querySelector("p").innerHTML = "clearing data";
     let width = 0;
     localStorage.clear();
-    eraseCookie("app_list")
+    eraseCookie("app_list");
     setInterval(() => {
-      width = (width + (100 / 20));
-      loader.querySelector("#pc_loader").style.width = width+"%";
+      width = width + 100 / 20;
+      loader.querySelector("#pc_loader").style.width = width + "%";
     }, 60);
     setTimeout(() => {
       window.location.reload();
-    }, 20*60);
+    }, 20 * 60);
   }
 }
 if (localStorage.getItem("version")) {
@@ -44,7 +59,13 @@ if (localStorage.getItem("version")) {
   } else {
     // old version (check stuff)
     document.querySelector(".loader p").innerHTML = "updating system";
-    warn_link_button("new version", "check new features", `${window.location.protocol + "//" + window.location.host}/assets/update/log.json`);
+    warn_link_button(
+      "new version",
+      "check new features",
+      `${
+        window.location.protocol + "//" + window.location.host
+      }/assets/update/log.json`
+    );
     localStorage.setItem("version", version);
   }
 } else {
@@ -55,47 +76,36 @@ if (localStorage.getItem("version")) {
 function closewindow(what, isappname) {
   appwindow.close(what, isappname);
 }
-window.addEventListener("contextmenu", e => e.preventDefault());
-  app_name_top = document.querySelector("#app_name");
-  windowelem = document.querySelector(".window");
-  dockparent = document.getElementsByClassName("dock-parent")[0];
-  title = document.querySelector(".title");
-  close = document.querySelector(".close_tab");
-  batteryelem = document.getElementById("battery");
-  loader = document.getElementById("pc_loader");
-  data = windowelem.getAttribute("data-window");
-  movetoelem = document.querySelectorAll(`[data-window="${data}"]`)[0];
-
-let gotopos = [movetoelem.getBoundingClientRect().left, movetoelem.getBoundingClientRect().top];
+window.addEventListener("contextmenu", (e) => e.preventDefault());
+app_name_top = document.querySelector("#app_name");
+windowelem = document.querySelector(".window");
+dockparent = document.getElementsByClassName("dock-parent")[0];
+title = document.querySelector(".title");
+close = document.querySelector(".close_tab");
+batteryelem = document.getElementById("battery");
+loader = document.getElementById("pc_loader");
+data = windowelem.getAttribute("data-window");
 let dockelem = document.querySelector(".dock-container");
-let checkboxes = document.querySelectorAll('input[type=checkbox]');
+let checkboxes = document.querySelectorAll("input[type=checkbox]");
 // logs actions to revert
 const actionhistory = [];
-/*-------------------------------------------*/
-/*----------------functions------------------*/
-/*-------------------------------------------*/
 function sleep(ms) {
-  return new Promise(resolve => setTimeout(resolve, ms));
+  return new Promise((resolve) => setTimeout(resolve, ms));
 }
-/*-------------------------------------------*/
-/*------Stolen-functions---------------------*/
-/*-------------------------------------------*/
 function menutime() {
-
   // We create a new Date object and assign it to a letiable called "time".
   let time = new Date(),
-
     // Access the "getHours" method on the Date object with the dot accessor.
     hours = time.getHours(),
-
     // Access the "getMinutes" method with the dot accessor.
     minutes = time.getMinutes();
 
-  document.querySelectorAll('.menutime')[0].innerHTML = harold(hours) + ":" + harold(minutes);
+  document.querySelectorAll(".menutime")[0].innerHTML =
+    harold(hours) + ":" + harold(minutes);
 
   function harold(standIn) {
     if (standIn < 10) {
-      standIn = '0' + standIn
+      standIn = "0" + standIn;
     }
     return standIn;
   }
@@ -109,16 +119,20 @@ function loop(battery) {
     batteryelem.innerHTML = battery + ' <i class="fas fa-battery-half"></i>';
   }, 2000);
   setTimeout(() => {
-    batteryelem.innerHTML = battery + ' <i class="fas fa-battery-three-quarters"></i>';
+    batteryelem.innerHTML =
+      battery + ' <i class="fas fa-battery-three-quarters"></i>';
   }, 3000);
   setTimeout(() => {
     batteryelem.innerHTML = battery + ' <i class="fas fa-battery-full"></i>';
   }, 4000);
-};
+}
 function dragElement(elmnt) {
-  setactive(elmnt);
+  appwindow.setactive(elmnt);
   elmnt.classList.add("grab");
-  let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+  let pos1 = 0,
+    pos2 = 0,
+    pos3 = 0,
+    pos4 = 0;
   // otherwise, move the DIV from anywhere inside the DIV:
   let iframes = document.querySelectorAll("iframe");
   for (let i = 0; iframes.length > i; i++) {
@@ -132,12 +146,9 @@ function dragElement(elmnt) {
     // get the mouse cursor position at startup:
     pos3 = e.clientX;
     pos4 = e.clientY;
-    if (pos3 < 10 || pos3 + 10 >= document.body.clientWidth || pos4 < 30) {
-
-    }
     document.onmouseup = function (e) {
       closeDragElement(e, pos3, pos4);
-    }
+    };
     // call a function whenever the cursor moves:
     document.onmousemove = elementDrag;
   }
@@ -146,6 +157,7 @@ function dragElement(elmnt) {
     e = e || window.event;
     e.preventDefault();
     // calculate the new cursor position:
+    elmnt.style.opacity = "0.5";
     pos1 = pos3 - e.clientX;
     pos2 = pos4 - e.clientY;
     pos3 = e.clientX;
@@ -176,8 +188,153 @@ function dragElement(elmnt) {
     }
     elmnt.style.top = pos5 + "px";
     elmnt.style.left = pos6 + "px";
+    for (let i = 0; i < resizezones.length; i++) {
+      const resize = resizezones[i];
+      if (resize.x.start <= pos3 && resize.x.end >= pos3 && resize.y.start <= pos4 && resize.y.end >= pos4) {
+        let div = document.createElement("div");
+        div.style.position = "fixed";
+        div.style.background = "rgba(0,0,0,0.5)";
+        div.style.left = resize.result.xpos + "px";
+        div.style.top = resize.result.ypos + "px";
+        div.style.width = resize.result.width + resize.result.measure[0];
+        div.style.height = resize.result.height + resize.result.measure[0];
+        div.setAttribute("class", "preview");
+        let previews = document.querySelectorAll(".preview");
+        previews.forEach(preview => {
+            preview.remove();
+        });
+        document.body.appendChild(div);
+      }else{
+        let previews = document.querySelectorAll(".preview");
+        previews.forEach(preview => {
+          setTimeout(() => {
+            preview.remove();
+          }, 750);
+        });
+      }
+    }
   }
-
+  let resizezones = [
+    {
+      x: {
+        start: 0,
+        end: 30,
+      },
+      y: {
+        start: (window.innerHeight / 100) * 15,
+        end: (window.innerHeight / 100) * 85,
+      },
+      result: {
+        measure: ["%", "%"],
+        height: 100,
+        width: 50,
+        xpos: 0,
+        ypos: 30,
+      },
+    },
+    {
+      x: {
+        start: 0,
+        end: 30,
+      },
+      y: {
+        start: 0,
+        end: (window.innerHeight / 100) * 15,
+      },
+      result: {
+        measure: ["%", "%"],
+        height: 50,
+        width: 50,
+        xpos: 0,
+        ypos: 30,
+      },
+    },
+    {
+      x: {
+        start: 30,
+        end: window.innerWidth - 30,
+      },
+      y: {
+        start: 0,
+        end: 30,
+      },
+      result: {
+        measure: ["%", "%"],
+        height: 100,
+        width: 100,
+        xpos: 0,
+        ypos: 30,
+      },
+    },
+    {
+      x: {
+        start: 0,
+        end: 30,
+      },
+      y: {
+        start: (window.innerHeight / 100) * 85,
+        end: window.innerHeight,
+      },
+      result: {
+        measure: ["%", "%"],
+        height: 50,
+        width: 50,
+        xpos: 0,
+        ypos: (window.innerHeight / 100) * 50,
+      },
+    },
+    {
+      x: {
+        start: window.innerWidth - 30,
+        end: window.innerWidth,
+      },
+      y: {
+        start: (window.innerHeight / 100) * 85,
+        end: window.innerHeight,
+      },
+      result: {
+        measure: ["%", "%"],
+        height: 50,
+        width: 50,
+        xpos: (window.innerWidth / 100) * 50,
+        ypos: (window.innerHeight / 100) * 50,
+      },
+    },
+    {
+      x: {
+        start: window.innerWidth - 30,
+        end: window.innerWidth,
+      },
+      y: {
+        start: 0,
+        end: (window.innerHeight / 100) * 15,
+      },
+      result: {
+        measure: ["%", "%"],
+        height: 50,
+        width: 50,
+        xpos: (window.innerWidth / 100) * 50,
+        ypos: 30,
+      },
+    },
+    {
+      x: {
+        start: window.innerWidth - 30,
+        end: window.innerWidth,
+      },
+      y: {
+        start: (window.innerHeight / 100) * 15,
+        end: (window.innerHeight / 100) * 85,
+      },
+      result: {
+        measure: ["%", "%"],
+        height: 100,
+        width: 50,
+        xpos: (window.innerWidth / 100) * 50,
+        ypos: 30,
+      },
+    },
+  ];
   function closeDragElement(e, x, y) {
     let iframes = document.querySelectorAll("iframe");
     for (let i = 0; iframes.length > i; i++) {
@@ -187,12 +344,26 @@ function dragElement(elmnt) {
     document.onmouseup = null;
     document.onmousemove = null;
     elmnt.classList.remove("grab");
-    if (y <= 30) {
-      appwindow.fullscreen(elmnt.firstElementChild);
-    } else if (x <= 10) {
-      resize_window(e, 50, 100, "%", 0, 30);
-    } else if (x + 10 >= document.body.clientWidth) {
-      resize_window(e, 50, 100, "%", 50, 30);
+    desktop.getActiveApp().style.opacity = "1";
+    for (let i = 0; i < resizezones.length; i++) {
+      const resize = resizezones[i];
+      if (
+        resize.x.start <= x &&
+        resize.x.end >= x &&
+        resize.y.start <= y &&
+        resize.y.end >= y
+      ) {
+        let the = resize.result;
+        resize_window(
+          e,
+          the.width,
+          the.height,
+          the.measure[0],
+          the.xpos,
+          the.ypos
+        );
+        break;
+      }
     }
   }
 }
@@ -200,38 +371,41 @@ function dragElement(elmnt) {
 /*------Event-Listeners----------------------*/
 /*-------------------------------------------*/
 
-dockelem.addEventListener('click', async event => {
+dockelem.addEventListener("click", async (event) => {
   if (event.target.hasAttribute("data-window")) {
     openapp(event.target.getAttribute("data-window"), event);
   } else if (event.target.children[0].hasAttribute("data-window")) {
     openapp(event.target.childNodes[0].getAttribute("data-window"), event);
   }
 });
-if (localStorage.getItem('background')) {
-  fetch(localStorage.getItem('background'))
-    .then(res => res.blob())
-    .then(blob => {
-      document.querySelector(':root').style.setProperty('--background', "url(" + URL.createObjectURL(blob) + ")");
-    })
-  // document.querySelector("img").src = file//URL.createObjectURL(localStorage.getItem('background'));
+if (localStorage.getItem("background")) {
+  fetch(localStorage.getItem("background"))
+    .then((res) => res.blob())
+    .then((blob) => {
+      document
+        .querySelector(":root")
+        .style.setProperty(
+          "--background",
+          "url(" + URL.createObjectURL(blob) + ")"
+        );
+    });
 }
 function localStorageSpace(num) {
-  return new Array((num * 1024) + 1).join('a')
+  return new Array(num * 1024 + 1).join("a");
 }
 
 // Determine the size of localStorage if it's not set
-
-if (!localStorage.getItem('size')) {
+if (!localStorage.getItem("size")) {
   localStorage.clear();
   let i = 0;
   try {
     // Test up to 20 MB
     for (i = 0; i <= 20000; i += 250) {
-      localStorage.setItem('test', localStorageSpace(i));
+      localStorage.setItem("test", localStorageSpace(i));
     }
   } catch (e) {
-    localStorage.removeItem('test');
-    localStorage.setItem('size', i ? i - 250 : 0);
+    localStorage.removeItem("test");
+    localStorage.setItem("size", i ? i - 250 : 0);
   }
 }
 /*-------------------------------------------*/
@@ -242,14 +416,14 @@ setInterval(menutime, 1000);
 /*------Check-Some-Things-Before-Load--------*/
 /*-------------------------------------------*/
 for (let i = 0; i < checkboxes.length; i++) {
-  checkboxes[i].addEventListener('change', function () {
+  checkboxes[i].addEventListener("change", function () {
     let checking;
     if (this.checked == true) {
       checking = true;
     } else {
       checking = false;
     }
-    checkboxes.forEach(checkbox => {
+    checkboxes.forEach((checkbox) => {
       checkbox.checked = false;
     });
     this.checked = checking;
@@ -259,13 +433,12 @@ for (let i = 0; i < checkboxes.length; i++) {
 /*--------------No logging for prod----------*/
 /*-------------------------------------------*/
 
-
 let DEBUG = true;
 if (!DEBUG) {
   if (!window.console) window.console = {};
   let methods = ["log", "debug", "warn", "info", "table", "error"];
   for (let i = 0; i < methods.length; i++) {
-    console[methods[i]] = function () { };
+    console[methods[i]] = function () {};
   }
 }
 
@@ -286,49 +459,55 @@ window.ononline = (event) => {
 window.addEventListener("keydown", shortcuts);
 window.addEventListener("keyup", shortcuts);
 function shortcuts(event) {
+  console.log(event, event.key);
   if (event.type == "keydown") {
-    if ((event.shiftKey && event.key.toLowerCase() == "f4") || (event.altKey && event.key.toLowerCase() == "w")) {
+    if (
+      (event.shiftKey && event.key.toLowerCase() == "f4") ||
+      (event.altKey && event.key.toLowerCase() == "w")
+    ) {
       //close event
       appwindow.close(document.querySelector(".active"), 0);
       event.preventDefault();
     } /* else if (event.key == "F3" || (event.ctrlKey && event.key == "f")) {
       //search event
       event.preventDefault();
-    } */ else if ((event.shiftKey && event.key.toLowerCase() == "d")) {
+    } */ else if (event.shiftKey && event.key.toLowerCase() == "d") {
       // duplicate event
       duplicate();
       event.preventDefault();
-    } else if ((event.shiftKey || event.ctrlKey) && event.key.toLowerCase() == "b") {
+    } else if (event.ctrlKey && event.key.toLowerCase() == "b") {
       //background change
-      let backgroundinput = document.getElementById("fileupload");
-      backgroundinput.click();
       event.preventDefault();
+      desktop.showFilepicker();
     } else if (event.key == "Home") {
       event.preventDefault();
       appwindow.hidetab("all");
-    } /* else if ((event.ctrlKey || event.altKey) && event.key.toLowerCase() == "z") {
-      event.preventDefault();
-      actionhistory.push("revert");
-    }*/ else if ((event.ctrlKey || event.altKey) && event.key.toLowerCase() == "1") {
+    } else if (
+      (event.ctrlKey || event.altKey) &&
+      event.key.toLowerCase() == "1"
+    ) {
       event.preventDefault();
       desktop.share();
     }
-  } else {
+  } else if (event.type == "keyup") {
     if (event.altKey && event.code == "KeyS") {
       event.preventDefault();
-      takeScreenShot()
+      takeScreenShot();
     }
     if (event.key.toLowerCase() == "tab") {
       event.preventDefault();
       if (document.querySelector(".active").nextElementSibling) {
-        document.querySelector(".active").nextElementSibling.classList.add("active");
+        document
+          .querySelector(".active")
+          .nextElementSibling.classList.add("active");
         document.querySelector(".active").classList.remove("active");
-
       } else {
-        let active = document.querySelector(".active")
+        let active = document.querySelector(".active");
         active.classList.remove("active");
         active.parentElement.firstElementChild.classList.add("active");
       }
+    } else if (event.shiftKey && event.key.toLowerCase() == "f11") {
+      appwindow.fullscreen(document.querySelector(".window.active"));
     }
   }
 }
@@ -341,11 +520,11 @@ async function openapp(name, event, data) {
   if (data) {
     for (var key in data) {
       if (data.hasOwnProperty(key)) {
-        out.push(key + '=' + encodeURIComponent(data[key]));
+        out.push(key + "=" + encodeURIComponent(data[key]));
       }
     }
 
-    out.join('&');
+    out.join("&");
     out = "?" + out;
   }
   if (desktop.getActiveApp()) {
@@ -354,11 +533,14 @@ async function openapp(name, event, data) {
   } else {
     // if none, select the first window element and make it active
     windowelem = document.querySelector(".window");
-    setactive(windowelem);
+    appwindow.setactive(windowelem);
   }
   if (document.querySelector(`.window[data-window='${name}']`)) {
   }
-  if (event.altKey || document.querySelector(".window").dataset.window == "boot") {
+  if (
+    event.altKey ||
+    document.querySelector(".window").dataset.window == "boot"
+  ) {
     // alt click to open in current window, instead of a new one
   } else {
     // make new window
@@ -369,9 +551,11 @@ async function openapp(name, event, data) {
   if (windowelem.classList.contains("fullscreen")) {
     dockparent.classList.add("animation");
   }
-  await fetch('./assets/frames/frames.php?q=' + name)
-    .then(response => response.json().then(data => ({ status: response.status, body: data })))
-    .then(json => {
+  await fetch("./assets/frames/frames.php?q=" + name)
+    .then((response) =>
+      response.json().then((data) => ({ status: response.status, body: data }))
+    )
+    .then((json) => {
       if (json.status == 200) {
         // app exists
         let app = json.body[0];
@@ -379,72 +563,100 @@ async function openapp(name, event, data) {
           console.log(app.specialsize);
           // add custom style for special windows
           let style = document.createElement("link");
-          style.setAttribute("href", window.location.protocol + "//" + window.location.hostname + "/assets/frames/" + app.developer + "/" + app.name + "/" + app.custom_style);
+          style.setAttribute(
+            "href",
+            window.location.protocol +
+              "//" +
+              window.location.hostname +
+              "/assets/frames/" +
+              app.developer +
+              "/" +
+              app.name +
+              "/" +
+              app.custom_style
+          );
           style.setAttribute("rel", "stylesheet");
           document.head.appendChild(style);
         }
         let source;
         if (!app.source.startsWith("https://")) {
           // local app or unsafe
-          source = "https://" + window.location.hostname + "/assets/frames/" + app.developer + "/" + app.name + "/" + app.source;
+          source =
+            "https://" +
+            window.location.hostname +
+            "/assets/frames/" +
+            app.developer +
+            "/" +
+            app.name +
+            "/" +
+            app.source;
         } else {
           // external url
           source = app.source;
+        }
+        if (app.url == 0) {
+          app.url = "about:blank";
         }
         appwindow.changetitle(app.title, app.url, app.desc, windowelem);
         let frame = windowelem.querySelector(".tab");
         frame.setAttribute("src", "app_loader.html?app=" + source + out);
         windowelem.classList.remove("minimize");
+        frame.addEventListener("load", function () {
+          frame.contentWindow.postMessage(settings, "*");
+        });
       } else {
         // empty app
-        let frame = windowelem.querySelector(".tab")
+        let frame = windowelem.querySelector(".tab");
         frame.setAttribute("src", "./assets/frames/no_app.html");
-        appwindow.changetitle(name, "about:blank", "this has not been made yet", windowelem);
+        appwindow.changetitle(
+          name,
+          "about:blank",
+          "this has not been made yet",
+          windowelem
+        );
         windowelem.classList.remove("minimize");
       }
-    })
+    });
 }
 const takeScreenShot = async () => {
   const stream = await navigator.mediaDevices.getDisplayMedia({
     preferCurrentTab: true,
-    video: { mediaSource: 'screen' },
-  })
+    video: { mediaSource: "screen" },
+  });
   // get correct video track
-  const track = stream.getVideoTracks()[0]
+  const track = stream.getVideoTracks()[0];
   // init Image Capture and not Video stream
-  const imageCapture = new ImageCapture(track)
+  const imageCapture = new ImageCapture(track);
   // take first frame only
-  const bitmap = await imageCapture.grabFrame()
+  const bitmap = await imageCapture.grabFrame();
   // destory video track to prevent more recording / mem leak
-  track.stop()
+  track.stop();
 
-  const canvas = document.createElement('canvas');
+  const canvas = document.createElement("canvas");
   // this could be a document.createElement('canvas') if you want
   // draw weird image type to canvas so we can get a useful image
-  canvas.width = bitmap.width
-  canvas.height = bitmap.height
-  const context = canvas.getContext('2d')
-  context.drawImage(bitmap, 0, 0, bitmap.width, bitmap.height)
+  canvas.width = bitmap.width;
+  canvas.height = bitmap.height;
+  const context = canvas.getContext("2d");
+  context.drawImage(bitmap, 0, 0, bitmap.width, bitmap.height);
   const image = canvas.toDataURL();
-  desktop.showNotifications("screenshot taken", "screenshot made", image, false)
+  desktop.showNotifications(
+    "screenshot taken",
+    "screenshot made",
+    image,
+    false
+  );
   // this turns the base 64 string to a [File] object
-  const res = await fetch(image)
-  const buff = await res.arrayBuffer()
+  const res = await fetch(image);
+  const buff = await res.arrayBuffer();
   // clone so we can rename, and put into array for easy proccessing
   const file = [
     new File([buff], `photo_${new Date()}.jpg`, {
-      type: 'image/jpeg',
+      type: "image/jpeg",
     }),
-  ]
-  return file
-}
-function setactive(parent) {
-  let actives = document.querySelectorAll(".active");
-  actives.forEach(element => {
-    element.classList.remove("active");
-  });
-  parent.classList.add("active");
-}
+  ];
+  return file;
+};
 function duplicate() {
   let clone_origin;
   if (desktop.getActiveApp()) {
@@ -463,10 +675,10 @@ function resize_window(target, xdim, ydim, unit, xpos, ypos) {
   windowelem.classList.remove("fullscreen");
   dockparent.classList.remove("animation");
   if (target == null || undefined) {
-    target = document.querySelector(".active")
+    target = document.querySelector(".active");
   } else {
     target.style.width = `${xdim}${unit}`;
-    target.style.left = `${xpos}${unit}`;
+    target.style.left = `${xpos}px`;
     target.style.height = `calc(${ydim}${unit} - 30px)`;
     target.style.top = `${ypos}px`;
   }
@@ -478,31 +690,25 @@ function disabled_warn(what) {
   } else {
     multiple = "is";
   }
-  systemerror(what + ` ${multiple} currently disabled`, `please check later for updates`);
-  throw (
-    new Error("disabled")
+  systemerror(
+    what + ` ${multiple} currently disabled`,
+    `please check later for updates`
   );
+  throw new Error("disabled");
   return;
 }
 // STYLING functions
 function brightnesschange(e) {
   // while brightness found -> remove
   while (document.body.style.filter.indexOf(`brightness(90%)`) !== -1) {
-    filter('brightness', 90, 'remove');
+    filter("brightness", 90, "remove");
   }
   for (let i = 0; e.max - e.value > i; i++) {
-    filter('brightness', 90, 'add');
+    filter("brightness", 90, "add");
   }
 }
 function invert(elem) {
   document.querySelector(elem).classList.toggle("inverted");
-}
-function reset(prop) {
-  let slider = document.querySelector(`.slider.${prop}`);
-  if (slider != null || slider != undefined) {
-    slider.value = slider.defaultValue;
-    slider.oninput();
-  }
 }
 function filter(prop, value, type) {
   settings.filterScreen(prop, value, type);
@@ -512,9 +718,15 @@ function filter(prop, value, type) {
 
 document.body.addEventListener("mousedown", function (e) {
   let element = e.target;
-  if (element.classList.contains("title") || element.classList.contains("actions")) {
+  if (
+    element.classList.contains("title") ||
+    element.classList.contains("actions")
+  ) {
     dragElement(e.target.parentElement.parentElement);
-  } else if (element.parentElement.classList.contains("title") || element.parentElement.classList.contains("actions")) {
+  } else if (
+    element.parentElement.classList.contains("title") ||
+    element.parentElement.classList.contains("actions")
+  ) {
     dragElement(e.target.parentElement.parentElement.parentElement);
   }
 });
@@ -529,12 +741,12 @@ document.body.addEventListener("click", async function (e) {
   } else if (eclass.contains("fullscreen_tab")) {
     appwindow.fullscreen(element);
   } else if (eclass.contains("invert")) {
-    invert('body');
+    invert("body");
   } else if (e.target.closest("#fullscreen")) {
     desktop.fullscreen_page(document.body);
   } else if (e.target.closest(".auto_brightness")) {
     autobrightness = !autobrightness;
-    ui_warn('brightness', autobrightness);
+    ui_warn("brightness", autobrightness);
   }
 });
 
@@ -552,7 +764,7 @@ if ("AmbientLightSensor" in window) {
   const sensor = new AmbientLightSensor();
   sensor.addEventListener("reading", (event) => {
     if (autobrightness == true) {
-      filter('brightness', 50 + (sensor.illuminance / 1000), 'replace');
+      filter("brightness", 50 + sensor.illuminance / 1000, "replace");
     }
     console.log(event, sensor);
   });
@@ -562,11 +774,11 @@ if ("AmbientLightSensor" in window) {
 
 document.addEventListener("fullscreenchange", function (e) {
   if (document.fullscreenElement) {
-    document.querySelector("#fullscreen").innerText = "close fullscreen"
+    document.querySelector("#fullscreen").innerText = "close fullscreen";
   } else {
-    document.querySelector("#fullscreen").innerText = "open fullscreen"
+    document.querySelector("#fullscreen").innerText = "open fullscreen";
   }
-})
+});
 // When the toggle button is clicked, enter/exit fullscreen
 document.addEventListener("change", function (e) {
   if (e.target.closest("#logo")) {
@@ -577,8 +789,8 @@ document.addEventListener("change", function (e) {
     } else {
       document.querySelector(".appname").style.display = "block";
     }
-  }else if(e.target.closest("#fileupload")){
-    desktop.setNewBackground();
+  } else if (e.target.closest("#fileupload")) {
+    desktop.setNewBackground(document.querySelector("#fileupload").files[0]);
   }
 });
 const registerServiceWorker = async () => {
@@ -599,27 +811,78 @@ const registerServiceWorker = async () => {
     }
   }
 };
-function iframeload(target) {
-  target.contentWindow.focus();
-  target.style.visibility = 'visible';
-}
 let desktop, settings, appwindow;
 window.addEventListener("load", function () {
-  settings = new Settings()
+  settings = new Settings();
   desktop = new Desktop();
   desktop.load();
-  iframeload(document.querySelector("iframe"));
   appwindow = new Window("Home", "about:blank", "Home");
+  appwindow.load(document.querySelector("iframe"));
   registerServiceWorker();
 });
 class Settings {
   constructor() {
-    this.brightness = 100,
-    this.filesize = 5,
-    this.background = 'url("./assets/images/bg.png")';
+    (this.dock = {
+      float: false,
+    }),
+      (this.colors = {
+        effect: "#e9aa02",
+        mainText: "#ffffff",
+        reversedText: "#000000",
+      }),
+      (this.background = {
+        color: "#212121",
+        image: "./assets/images/bg.png",
+      }),
+      (this.screen = {
+        autoBrightness: false,
+        brightness: 100,
+        saturation: 100,
+        contrast: false,
+      }),
+      (this.files = {
+        size: Math.abs(document.querySelector(".slider.filesize").value) / 10,
+        image: {
+          folder: "",
+          txt: "",
+        },
+      });
   }
-  changeBackground(background){
-    this.background = "url(" +  background + ")";
+  set(settings) {
+    if (settings) {
+      for (const [key, value] of Object.entries(settings)) {
+        this[key] = value;
+      }
+    }
+    this.changeBackground(this.background.image);
+    document
+      .querySelector(":root")
+      .style.setProperty("--main-effect", this.colors.effect);
+    document
+      .querySelector(":root")
+      .style.setProperty("--main-text", this.colors.mainText);
+    document
+      .querySelector(":root")
+      .style.setProperty("--reversed-text", this.colors.reversedText);
+    document
+      .querySelector(":root")
+      .style.setProperty("--file-columns", this.files.size);
+    document
+      .querySelector(":root")
+      .style.setProperty("--background-color", this.background.color);
+  }
+  reset(prop) {
+    let slider = document.querySelector(`.slider.${prop}`);
+    if (slider != null || slider != undefined) {
+      slider.value = slider.defaultValue;
+      slider.oninput();
+    }
+  }
+  changeBackground(background) {
+    this.background.image = background;
+    document
+      .querySelector(":root")
+      .style.setProperty("--background", `url(${this.background.image})`);
   }
   filterScreen(prop, value, type) {
     if (disabled.filters) {
@@ -628,24 +891,38 @@ class Settings {
     if (type == "toggle") {
       // -1 means not found => confusing
       if (document.body.style.filter.indexOf(`${prop}(${value}%)`) !== -1) {
-        document.body.style.filter = document.body.style.filter.replaceAll(`${prop}(${value}%)`, "");
+        document.body.style.filter = document.body.style.filter.replaceAll(
+          `${prop}(${value}%)`,
+          ""
+        );
       } else {
-        document.body.style.filter = document.body.style.filter + `${prop}(${value}%)`;
+        document.body.style.filter =
+          document.body.style.filter + `${prop}(${value}%)`;
       }
     } else if (type == "add") {
       document.body.style.filter += `${prop}(${value}%)`;
     } else if (type == "remove") {
-      document.body.style.filter = document.body.style.filter.replace(`${prop}(${value}%)`, "");
+      document.body.style.filter = document.body.style.filter.replace(
+        `${prop}(${value}%)`,
+        ""
+      );
     } else if (type == "replace") {
       let regex = prop + "\\(.+?%\\)";
       let tofind = new RegExp(regex, "g");
-      console.log(tofind.toString(), document.body.style.filter.match(tofind), document.body.style.filter)
-      document.body.style.setProperty("filter", document.body.style.filter.replaceAll(tofind, ""));
+      console.log(
+        tofind.toString(),
+        document.body.style.filter.match(tofind),
+        document.body.style.filter
+      );
+      document.body.style.setProperty(
+        "filter",
+        document.body.style.filter.replaceAll(tofind, "")
+      );
       document.body.style.filter += `${prop}(${value}%)`;
     } else {
       return;
     }
-    }
+  }
 }
 class Desktop extends Settings {
   constructor() {
@@ -653,112 +930,136 @@ class Desktop extends Settings {
     this.amountloads = 0;
     this.frame = document.querySelector("iframe");
   }
-  loading(isLoading){
-    if(isLoading == true){
+  loading(isLoading) {
+    if (isLoading == true) {
       this.amountloads++;
-    }else{
+    } else {
       this.amountloads--;
     }
-    if(this.amountloads >= 1){
+    if (this.amountloads >= 1) {
       document.body.classList.add("loading");
-    }else{
+    } else {
       document.body.classList.remove("loading");
     }
   }
   getActiveApp(needresult) {
-    if(document.querySelector(".window.active")){
+    if (document.querySelector(".window.active")) {
       return document.querySelector(".window.active");
-    }else{
-      if(needresult){
+    } else {
+      if (needresult) {
         return document.querySelector(".window");
-      }else{
+      } else {
         return false;
       }
     }
   }
   showNotifications(title, body, icon, interaction) {
-    console.log(icon, interaction)
+    let notification = document.querySelector(".notification");
     if (icon == false || icon == "") {
       icon = "./favicon.ico";
+      notification.querySelector("img").style.display = "none";
+    } else {
+      notification.querySelector("img").style.display = "block";
     }
     Notification.requestPermission(async function (result) {
-      if (result === 'granted' && document.hasFocus()) {
+      if (result === "granted") {
+        let notification;
         if (interaction == true) {
-          navigator.serviceWorker.ready.then(function (registration) {
+          notification = navigator.serviceWorker.ready.then(function (
+            registration
+          ) {
             registration.showNotification(title, {
               body: body,
               icon: icon,
               requireInteraction: true,
-              tag: 'mock os'
+              tag: "mock os",
             });
           });
         } else {
-          navigator.serviceWorker.ready.then(function (registration) {
+          notification = navigator.serviceWorker.ready.then(function (
+            registration
+          ) {
             registration.showNotification(title, {
               body: body,
               icon: icon,
               requireInteraction: false,
-              tag: 'mock os'
+              tag: "mock os",
             });
           });
         }
+        notification.onclick = (event) => {
+          event.preventDefault(); // prevent the browser from focusing the Notification's tab
+          window.open(icon, "_blank");
+        };
       } else {
-        let notification = document.querySelector(".notification");
         notification.querySelector("img").src = icon;
+        notification.querySelector("h3").innerHTML = title;
+        notification.querySelector("p").innerHTML = body;
         notification.classList.add("open");
         await sleep(5000);
         notification.classList.remove("open");
       }
     });
   }
-  getOpenApps() {
-
+  getOpenApps() {}
+  setOpenApps() {}
+  showFilepicker() {
+    let backgroundinput = document.getElementById("fileupload");
+    backgroundinput.click();
   }
-  setOpenApps() {
-
-  }
-  setNewBackground() {
-    let file = document.querySelector("#fileupload").files[0];
+  setNewBackground(file) {
     if (file == undefined) {
-      ui_warn("unable to save background", "no file found");
+      desktop.showNotifications(
+        "unable to save background",
+        "background image not found",
+        false,
+        false
+      );
       return;
     }
-    if (file.size > Number(localStorage.getItem('size')) * 1024) {
-      ui_warn("unable to save background", "restarting the pc will not keep this background");
-    };
-    if (file.type.match('image.*')) {
-      document.querySelector('.videobg').src = "about:blank";
-      document.querySelector("body").style.background = "rebeccapurple";
-      this.changeBackground(URL.createObjectURL(document.getElementById("fileupload").files[0]))
+    if (file.size > Number(localStorage.getItem("size")) * 1024) {
+      desktop.showNotifications(
+        "background image '" + file.name + "' too big",
+        "the file is too big to be saved, restarting will not keep this background",
+        false,
+        false
+      );
+    }
+    if (file.type.match("image.*")) {
+      document.querySelector(".videobg").src = "#";
+      super.changeBackground(
+        URL.createObjectURL(document.getElementById("fileupload").files[0])
+      );
       const reader = new FileReader();
 
       reader.readAsDataURL(document.getElementById("fileupload").files[0]);
 
-      reader.addEventListener('load', () => {
-        if (!(file.size > Number(localStorage.getItem('size')) * 1024)) {
-          localStorage.setItem('background', reader.result);
+      reader.addEventListener("load", () => {
+        if (!(file.size > Number(localStorage.getItem("size")) * 1024)) {
+          localStorage.setItem("background", reader.result);
         }
       });
-    } else if (file.type.match('video.*')) {
-      readvideobg(event);
+    } else if (file.type.match("video.*")) {
+      readvideobg();
       return;
     } else {
       return;
     }
   }
   async load() {
+    super.set();
     this.loading(true);
     // check if system is disabled or not
     if (disabled.system) {
       disabled_warn("system");
     }
     // set background
-    if (localStorage.getItem('background')) {
-      fetch(localStorage.getItem('background'))
-        .then(res => res.blob())
-        .then(blob => {
-          document.querySelector(':root').style.setProperty('--background', "url(" + URL.createObjectURL(blob) + ")");
-        })
+    if (localStorage.getItem("background")) {
+      fetch(localStorage.getItem("background"))
+        .then((res) => res.blob())
+        .then((blob) => {
+          settings.changeBackground(URL.createObjectURL(blob));
+        });
     }
     document.querySelector(".loader p").style.display = "block";
     // set battery information
@@ -766,11 +1067,11 @@ class Desktop extends Settings {
     // show loader
     let i = 0;
     loader.style.width = 0;
-    let loaderwidth = (loader.style.width.replace("%", ""));
-    loaderwidth = (loaderwidth.replace("px", ""));
+    let loaderwidth = loader.style.width.replace("%", "");
+    loaderwidth = loaderwidth.replace("px", "");
     loaderwidth = Number(loaderwidth);
     while (100 > i) {
-      i = i + (Math.random() * 5);
+      i = i + Math.random() * 5;
       await sleep(0);
       loader.style.width = `${i}%`;
     }
@@ -800,19 +1101,24 @@ class Desktop extends Settings {
           let level = battery.level * 100;
           level = Math.round(Number(level));
           if (level < 10) {
-            batteryelem.innerHTML = level + '<i class="fas fa-battery-empty"></i>';
+            batteryelem.innerHTML =
+              level + '<i class="fas fa-battery-empty"></i>';
           }
           if (level >= 10 && battery.level < 30) {
-            batteryelem.innerHTML = level + '<i class="fas fa-battery-quarter"></i>'
+            batteryelem.innerHTML =
+              level + '<i class="fas fa-battery-quarter"></i>';
           }
           if (level >= 30 && battery.level < 60) {
-            batteryelem.innerHTML = level + '<i class="fas fa-battery-half"></i>'
+            batteryelem.innerHTML =
+              level + '<i class="fas fa-battery-half"></i>';
           }
           if (level >= 60 && battery.level < 90) {
-            batteryelem.innerHTML = level + '<i class="fas fa-battery-three-quarters"></i>'
+            batteryelem.innerHTML =
+              level + '<i class="fas fa-battery-three-quarters"></i>';
           }
           if (level > 90) {
-            batteryelem.innerHTML = level + '<i class="fas fa-battery-full"></i>'
+            batteryelem.innerHTML =
+              level + '<i class="fas fa-battery-full"></i>';
           }
         }
       });
@@ -832,10 +1138,10 @@ class Desktop extends Settings {
     try {
       await navigator.share(shareData);
     } catch (err) {
-      ui_warn("error", err)
+      ui_warn("error", err);
     }
   }
-  fullscreen_page(element){
+  fullscreen_page(element) {
     if (document.fullscreenElement) {
       // exitFullscreen is only available on the Document object.
       document.exitFullscreen();
@@ -866,14 +1172,16 @@ class Window extends Desktop {
     try {
       await navigator.share(shareData);
     } catch (err) {
-      ui_warn("error", err)
+      ui_warn("error", err);
     }
   }
   changetitle(windowname, windowurl, windowdesc, target) {
-    null == windowname ? this.title = "Home" : this.title = windowname;
-    null == windowurl ? this.url = "about:blank" : this.url = windowurl;
-    null == windowdesc ? this.desc = undefined : this.desc = windowdesc;
-    target.querySelector(".title").innerHTML = `<a target='_blank' href='${this.url}'>${this.title}: ${this.desc}</a> 🔍`;
+    null == windowname ? (this.title = "Home") : (this.title = windowname);
+    null == windowurl ? (this.url = "about:blank") : (this.url = windowurl);
+    null == windowdesc ? (this.desc = undefined) : (this.desc = windowdesc);
+    target.querySelector(
+      ".title"
+    ).innerHTML = `<a target='_blank' href='${this.url}'>${this.title}: ${this.desc}</a> 🔍`;
     super.setwindowname(this.title);
     return;
   }
@@ -891,14 +1199,15 @@ class Window extends Desktop {
   hidetab(tab) {
     if (tab == "all") {
       let windows = document.querySelectorAll(".window");
-      windows.forEach(element => {
-        element.classList.add("minimize")
+      windows.forEach((element) => {
+        element.classList.add("minimize");
       });
     } else {
       tab.closest(".window").classList.add("minimize");
     }
   }
   close(tab, isappname) {
+    window.top[0].focus();
     if (isappname) {
       tab = document.querySelector(`#window[data-window=${tab}]`);
     }
@@ -906,7 +1215,7 @@ class Window extends Desktop {
       super.setwindowname("Home");
       let windows = document.querySelectorAll(".window");
       windows.pop();
-      windows.forEach(window => {
+      windows.forEach((window) => {
         if (document.querySelectorAll(".window").length > 1) {
           window.remove();
         } else {
@@ -920,12 +1229,24 @@ class Window extends Desktop {
       tab.closest(".window").classList.add("minimize");
     }
   }
+  load(target) {
+    target.contentWindow.focus();
+    target.style.visibility = "visible";
+  }
+  setactive(parent) {
+    let actives = document.querySelectorAll(".active");
+    actives.forEach((element) => {
+      element.classList.remove("active");
+    });
+    parent.classList.add("active");
+  }
 }
-
-
-
+window.onmessage = function (message) {
+  console.log(message.data);
+  settings.set(message.data);
+};
 function readvideobg(evt) {
-  let video = document.querySelector('.videobg')
+  let video = document.querySelector(".videobg");
   //Retrieve the first (and only!) File from the FileList object
   let f = evt.target.files[0];
 
@@ -938,18 +1259,17 @@ function readvideobg(evt) {
       let arrayBuffer = uint8Array.buffer;
       let blob = new Blob([arrayBuffer]);
       video.src = URL.createObjectURL(blob);
-    }
+    };
     r.readAsArrayBuffer(f);
-
   } else {
     alert("Failed to load file");
   }
 }
-function systemerror(name, message){
+function systemerror(name, message) {
   let div = document.createElement("div");
   let text = document.createElement("p");
   text.style.fontSize = "4vw";
-  text.style.textAlign = "justify"
+  text.style.textAlign = "justify";
   text.style.display = "flex";
   text.style.alignItems = "center";
   text.style.alignContent = "center";
@@ -964,7 +1284,7 @@ function systemerror(name, message){
   div.style.height = "100vh";
   div.style.width = "100vw";
   div.style.position = "fixed";
-  div.style.zIndex = "152"
+  div.style.zIndex = "152";
   div.style.background = "var(--main-effect)";
   document.body.appendChild(div);
 }

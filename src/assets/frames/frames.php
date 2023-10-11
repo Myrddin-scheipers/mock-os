@@ -78,24 +78,30 @@ try {
     }
     if (isset($_GET["q"])) {
         $name = htmlspecialchars($_GET["q"]);
+        $name = filter($name);
         searchQuery("name", urldecode($name), 1, 100);
         header('Content-Type: application/json; charset=utf-8');
     } else if (isset($_GET["ext"])) {
         $ext = urldecode($_GET["ext"]);
+        $ext = filter($ext);
         searchQuery("extentions", $ext, 2, 100);
         header('Content-Type: application/json; charset=utf-8');
     } else if (isset($_GET["id"])) {
-        searchQuery("id", $_GET["id"], 1, 1);
+        $id = urldecode($_GET["id"]);
+        $id = filter($id);
+        searchQuery("id", $id, 1, 1);
         header('Content-Type: application/json; charset=utf-8');
     } else if (isset($_GET["installed"])) {
         if (!isset($_COOKIE["app_list"])) {
             $apps = [1, 2, 4, 9, 10, 15];
-            setcookie("app_list", json_encode($apps), time() + (86400 * 365), "/"); // 86400 = 1 day
+            setcookie("app_list", json_encode($apps), time() + (86400 * 365), "/", false, false); // 86400 = 1 day
             searchQuery("id", $apps, 3, count($apps));
             header('Content-Type: application/json; charset=utf-8');
         } else {
             $applist = json_decode($_COOKIE["app_list"]);
+            $applist = filter($applist);
             searchQuery("id", $applist, 3, count($applist));
+            
             header('Content-Type: application/json; charset=utf-8');
         }
     } else {
@@ -105,6 +111,10 @@ try {
     return;
 } catch (\Throwable $th) {
     backupjson();
+}
+function filter($var){
+    $var = urlencode($var);
+    return filter_var($var, FILTER_SANITIZE_URL);
 }
 function backupjson()
 {

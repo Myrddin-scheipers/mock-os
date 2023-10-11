@@ -9,7 +9,7 @@
   ?>
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>Mock os</title>
   <script defer src="./script.js"></script>
   <!-- app list style -->
@@ -46,7 +46,7 @@
     display: flex;
     align-items: flex-end;
 ">this project is to test the limits of the web<br>
-      All copyrighted content (i.e. background images) on this site are owned by their respective owners.<br>
+      All copyrighted content (i.e. images & fonts) on this site are owned by their respective owners.<br>
       this projec is in no way affiliated with Apple Inc or any other brand.</p>
   </div>
   <div class="max_size">
@@ -64,7 +64,7 @@
           <span onclick="resetsystem()">Reset</span>
           <span class="disabled">Crapp store</span>
           <span class="disabled">Recent items</span>
-          <span onclick="appwindow.close(desktop.getActiveApp(true));" class="appname">Force quit [app]</span>
+          <label for="logo" onclick="appwindow.close(desktop.getActiveApp(true));" class="appname">Force quit [app]</label>
           <span class="disabled">Sleep</span>
           <span onclick="window.location.reload()">Restart</span>
           <span class="disabled">Shutdown</span>
@@ -97,12 +97,12 @@
             <p>brightness</p>
             <input class="slider brightness" oninput="brightnesschange(this)" type="range" min="0" max="10" value="10" />
             <span class="auto_brightness">Auto</span>
-            <span onclick="reset('brightness')">reset</span>
+            <span onclick="settings.reset('brightness')">reset</span>
           </div>
           <div class="group">
             <p>saturation</p>
             <input class="slider saturate" oninput="filter('saturate', this.value, 'replace')" type="range" min="0" max="200" value="100" />
-            <span onclick="reset('saturate')">reset</span>
+            <span onclick="settings.reset('saturate')">reset</span>
           </div>
           <div class="group">
             <p>screen filters</p>
@@ -115,6 +115,7 @@
         <input type="checkbox" id="windowsettings">
         <label for="windowsettings" class="menus">system</label>
         <div class="name">
+        <label for="windowsettings" onclick="openapp('settings', false)">settings</label>
           <form method="post" enctype="multipart/form-data">
             <label for="fileupload">Change background</label>
             <input accept="video/*, image/*" id="fileupload" type="file" name="files[]" multiple>
@@ -123,7 +124,7 @@
           <div class="group">
             <span>files display size</span>
             <input class="slider filesize" oninput="filecountchange(this)" type="range" min="-150" max="-50" value="-100" />
-            <span onclick="reset('filesize')">reset</span>
+            <span onclick="settings.reset('filesize')">reset</span>
           </div>
         </div>
       </div>

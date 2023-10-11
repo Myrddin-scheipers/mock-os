@@ -1,11 +1,11 @@
 let settings, capabilities;
 let mediaRecorder, recording;
-let requests = [
+let toreq = [
   ["lens", "audio & camera", "allowperms"],
 ];
 log = console.log;
 document.querySelector(".controls").style.display = "none";
-request();
+request(toreq, this.window);
 function mute() {
   document.querySelector(".speaker").classList.toggle("mute");
   video.muted = isMicrophoneActive;

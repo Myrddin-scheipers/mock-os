@@ -29,5 +29,11 @@
         "fix": ["some z-index issues"],
         "added": [],
         "removed": []
+    },
+    "0.17": {
+        "fix": ["some z-index issues", "lowered the area to hover to show the bottom menu", "moved the bottom menu fully to the bottom", "fixed some security issues", "not working context menu items will appear darker"],
+        "added": ["added settings under the 'system' menu", "added custom accent colors", "added background from external sources in settings", "force quit functionality added", "moving an app will make it half transparent & will show an overlay in case it will change position & resize"],
+        "removed": ["removed some unused css"],
+        "todo": ["give settings app a good layout", "closing an app should remove the name in the top menu"]
     }
 }

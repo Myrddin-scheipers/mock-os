@@ -27,7 +27,6 @@
             display: block;
             -webkit-user-modify: read-write;
             -moz-user-modify: read-write;
-            user-modify: read-write;
         }
     </style>
 </head>
@@ -35,6 +34,7 @@
 <body class="overflow">
     <?php
     $filename = $_GET["path"];
+    $filename = filter_var($filename, FILTER_SANITIZE_URL);
     $file = "../" . $filename;
     $ext = pathinfo($file, PATHINFO_EXTENSION);
     $file_url = "https://localhost/" . $filename;

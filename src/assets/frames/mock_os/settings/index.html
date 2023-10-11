@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Settings</title>
-    <link rel="stylesheet" href="../../css/iframes_content.css">
+    <link rel="stylesheet" href="../../../css/iframes_content.css">
     <style>
         body {
             display: grid;
@@ -15,19 +15,131 @@
             min-width: 100%;
             min-height: 100vh;
         }
+
+        p {
+            margin: 0;
+        }
+
         .settingslist {
             background-color: rgba(255, 255, 255, 0.5);
+        }
+
+        .save {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+        }
+
+        .img {
+            height: 10vw;
+            width: auto;
         }
     </style>
 </head>
 
-<body>
+<body data-entry="colors">
     <div class="settingslist">
+        <p data-entry="colors">Colors</p>
+        <p data-entry="background">Background</p>
+        <p data-entry="screen">Screen</p>
+        <p data-entry="files">Files</p>
+    </div>
+    <div class="settings">
 
     </div>
-    <div>
-
+    <div class="save">
+        <button onclick="sendchange()">
+            save
+        </button>
     </div>
+    <script>
+        let settings;
+        function savechange() {
+            what = document.body.dataset.entry;
+            let value = this.value;
+            if (this.type == "checkbox") {
+                value = this.checked;
+            } else if (this.type == "range") {
+                value = Number(value);
+            }
+            settings[what][this.dataset.key] = value;
+            console.log(value);
+            console.log(settings);
+        }
+        function sendchange() {
+            let tosend = settings;
+            console.log(tosend);
+            tosend = JSON.stringify(tosend);
+            console.log(tosend);
+            tosend = JSON.parse(tosend);
+            console.log(tosend);
+            window.top.postMessage(tosend, '*');
+        }
+        window.onmessage = function (message) {
+            settings = message.data;
+            loadsettings(settings, "colors")
+        };
+        function loadsettings(setting, what, name) {
+            let settingslist = document.querySelector(".settings");
+            settingslist.innerHTML = "";
+            if (!name) {
+                    name = what;
+                    if (name.endsWith("s")) {
+                        name = name.substring(0, name.length - 1);
+                    }
+            }
+            if (what) {
+                setting = setting[what];
+            }
+            for (const [key, value] of Object.entries(setting)) {
+                let label = document.createElement("label");
+                let settingselem = document.createElement("input");
+                settingselem.addEventListener("change", savechange);
+                settingselem.setAttribute("data-key", key);
+                settingselem.setAttribute("value", value);
+                if (typeof value == 'object') {
+                    console.log(value);
+                    loadsettings(value, false, key);
+                } else {
+
+                    if (typeof value == 'string') {
+                        if (value.startsWith("#")) {
+                            settingselem.setAttribute("type", "color");
+                        } 
+                        // else if (ImageExist(value)) {
+                        //     settingselem = document.createElement("img")
+                        //     settingselem.setAttribute("src", value);
+                        // } 
+                        else {
+                            console.log(ImageExist(value));
+                            settingselem.setAttribute("type", "text");
+                        }
+                    } else if (typeof value == 'boolean') {
+                        settingselem.setAttribute("type", "checkbox");
+                    } else if (typeof value == 'number') {
+                        settingselem.setAttribute("type", "range");
+                    }
+                    label.innerHTML = key.replaceAll("_", " ") + " " + name;
+                    label.appendChild(settingselem)
+                    settingslist.appendChild(label);
+                }
+            }
+        }
+        document.querySelector(".settingslist").addEventListener("click", function (e) {
+            this.focus();
+            if (!e.target.dataset.entry) {
+                return;
+            } else {
+                loadsettings(settings, e.target.dataset.entry);
+                document.body.dataset.entry = e.target.dataset.entry;
+            }
+        })
+        function ImageExist(url) {
+            var img = new Image();
+            img.src = url;
+            return img.height != 0;
+        }
+    </script>
 </body>
 
 </html>

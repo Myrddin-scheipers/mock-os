@@ -3,12 +3,12 @@ function sirlisten() {
   let listeningstatus = document.getElementById("listeningstatus");
   /* JS comes here */
   // get output div reference
-  var output = document.getElementById("speech_value");
+  let output = document.getElementById("speech_value");
   // get action element reference
   // new speech recognition object
   if ('SpeechRecognition' in window || 'webkitSpeechRecognition' in window) {
-    var SpeechRecognition = SpeechRecognition || webkitSpeechRecognition;
-    var recognition = new SpeechRecognition();
+    let SpeechRecognition = SpeechRecognition || webkitSpeechRecognition;
+    let recognition = new SpeechRecognition();
   } else {
     listeningstatus.innerHTML = "Sorry, we have no support on your browser";
     return;
@@ -52,10 +52,10 @@ function sirlisten() {
   };
   // This runs when the speech recognition service returns result
   recognition.onresult = async function (event) {
-    var transcript = event.results[0][0].transcript;
+    let transcript = event.results[0][0].transcript;
     // transcript = thing for testing;
     // let transcript = "Tell me a word";
-    var msg = new SpeechSynthesisUtterance();
+    let msg = new SpeechSynthesisUtterance();
     msg.lang = 'en-US';
     output.innerHTML += "<span class='right'>" + transcript + "</span>";
     if (transcript.toLowerCase().includes("joke")) {
@@ -64,10 +64,15 @@ function sirlisten() {
           .then(response => response.json())
           .then(json => {
             let number = Math.floor(Math.random() * json.length);
-            output.innerHTML += "<span class='left'>" + json[number]["title"] + "</span>";
+            let span = document.createElement("span");
+            span.classList.add("left");
+            span.innerText = json[number]["title"];
+            output.appendChild(span);
             msg.text = json[number]["title"];
             window.speechSynthesis.speak(msg);
-            output.innerHTML += "<span class='left'>" + json[number]["body"] + "</span>";
+            let span2 = document.createElement("span");
+            span2.innerText = json[number]["body"];
+            output.appendChild(span2);
             let msg2 = new SpeechSynthesisUtterance();
             msg2.lang = 'en-US';
             msg2.text = json[number]["body"];
@@ -82,7 +87,7 @@ function sirlisten() {
           await fetch('./facts.json')
             .then(response => response.json())
             .then(json => {
-              var msg2 = new SpeechSynthesisUtterance();
+              let msg2 = new SpeechSynthesisUtterance();
               msg2.lang = 'en-US';
               msg2.text = "i will give you a useless fact, here you go";
               output.innerHTML += "<span>useless fact:</span><span>";
@@ -104,7 +109,7 @@ function sirlisten() {
                 let number = Math.floor(Math.random() * json.length);
                 let color = json[number]["name"];
                 textvar = "i've chosen to give you the color " + color;
-                var msg2 = new SpeechSynthesisUtterance();
+                let msg2 = new SpeechSynthesisUtterance();
                 msg2.lang = 'en-US';
                 msg2.text = textvar;
                 window.speechSynthesis.speak(msg2);

@@ -25,9 +25,8 @@ function checkUrl($url)
             return TRUE;
         }
         // Should never happen, but if something goofy got here, return false value
-        return FALSE;
     }else{
-        return FALSE;
+        return false;
     }
 }
 $root = "https://localhost";
