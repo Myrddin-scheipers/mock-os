@@ -6,9 +6,13 @@ function sirlisten() {
   let output = document.getElementById("speech_value");
   // get action element reference
   // new speech recognition object
-  if ('SpeechRecognition' in window || 'webkitSpeechRecognition' in window) {
-    let SpeechRecognition = SpeechRecognition || webkitSpeechRecognition;
-    let recognition = new SpeechRecognition();
+  let recognition;
+  if ('SpeechRecognition' in window){
+    let speechrec = SpeechRecognition;
+    recognition = new speechrec();
+  }else if( 'webkitSpeechRecognition' in window) {
+    let speechrec = webkitSpeechRecognition;
+    recognition = new speechrec();
   } else {
     listeningstatus.innerHTML = "Sorry, we have no support on your browser";
     return;
@@ -79,7 +83,6 @@ function sirlisten() {
             window.speechSynthesis.speak(msg2);
           })
       } catch (e) {
-        console.log(e, "e");
       }
     } else {
       if (transcript.toLowerCase().includes("fact")) {
@@ -98,7 +101,6 @@ function sirlisten() {
               window.speechSynthesis.speak(msg);
             })
         } catch (e) {
-          console.warn(e, "e");
         }
       } else {
         if (transcript.toLowerCase().includes("color") || transcript.toLowerCase().includes("colour")) {
@@ -122,7 +124,6 @@ function sirlisten() {
                 window.speechSynthesis.speak(msg);
               })
           } catch (e) {
-            console.warn(e, "e");
           }
         } else if ((transcript.toLowerCase().includes("tell") || transcript.toLowerCase().includes("give")) && transcript.toLowerCase().includes("word")) {
           try {
@@ -138,7 +139,6 @@ function sirlisten() {
                 window.speechSynthesis.speak(msg);
               })
           } catch (e) {
-            console.warn(e, "e");
           }
         } else {
           let response = "Sorry, i dont understand what you mean with " + transcript;

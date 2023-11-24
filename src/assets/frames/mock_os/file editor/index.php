@@ -1,12 +1,26 @@
+<?php 
+header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
+header("Cache-Control: post-check=0, pre-check=0", false);
+header("Pragma: no-cache");
+error_reporting(0);
+require_once($_SERVER['DOCUMENT_ROOT'] . "/_php/protocol.php");
+$root = $protocol . $_SERVER["SERVER_NAME"] . "/";
+?>
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
-    <link rel="stylesheet" href="../../../../cursors.css">
+<link rel="stylesheet" href="../../../../cursors.css">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>File reader</title>
-    <link rel="stylesheet" href="../../../../_styles/iframes_content.css">
+    <title>File editor - mock os</title>
+    <script>
+        if(typeof Settings == 'undefined'){
+            let script = document.createElement('script')
+            script.src = "<?php echo $root . "_scripts/settings.js";?>";
+            document.getElementsByTagName('head')[0].appendChild(script)
+        }
+    </script>    <link rel="stylesheet" href="<?php echo $root;?>_styles/iframes_content.css">
     <style>
         body {
             background-color: #000000;
@@ -23,6 +37,7 @@
     $hasslider = false;
     $default_opactiy = 0;
     $filename = $_GET["path"];
+    $filename = str_replace(" ", "%20", $filename);
     $file = "../" . $filename;
     $ext = pathinfo($file, PATHINFO_EXTENSION);
     $file_url = $root . $filename;
@@ -37,13 +52,17 @@
     // do stuff with the info
 
     if (is_dir($file) || is_array($type)) {
-        header('Location: ' . $root . '/app_loader.html?app=./_views/files.php?path=' . $filename);
+        header('Location: ' . $root . '/app_loader.html?app=./_views/directory.php?path=' . $filename);
         die;
     } else if (str_starts_with($type, "video/")) {
+        $videotype = $type;
         $default_opactiy = 0;
         $hasslider = true;
         $type = "video";
     ?>
+        <link rel="preload" href="<?php echo $root;?>/_styles/inputs.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="<?php echo $root;?>/_styles/inputs.css"></noscript>
+
         <meta property="og:title" content="file reader || video" />
         <meta property="og:type" content="video.movie" />
         <meta property="og:url" content="<?php echo $file_url ?>" />
@@ -55,13 +74,13 @@
         <meta name="twitter:description" content="embed goes nyoum" />
         <meta name="twitter:player" content="<?php echo $file_url ?>" />
         <meta name="twitter:player:stream" content="<?php echo $file_url ?>" />
-        <meta name="twitter:player:stream:content_type" content="<?php echo $type; ?>" />
+        <meta name="twitter:player:stream:content_type" content="<?php echo $videotype; ?>" />
         <div class="video">
             <div class="controls">
-                <input id="range" oninput="seekvideo(this)" type="range" min="0" max="0" value="0">
+                <input id="range" class="slider" oninput="seekvideo(this)" type="range" min="0" max="0" value="0">
             </div>
-            <video ondurationchange="setvideotime(this)" disablePictureInPicture controls="true" onerror="imgError(this);">
-                <source src="<?php echo $file_url ?>" type="<?php echo $type ?>">
+            <video ontimeupdate="settime(this)" ondurationchange="setvideotime(this)" disablePictureInPicture controls="true" onerror="imgError(this);">
+                <source src="<?php echo $file_url ?>" type="<?php echo $videotype ?>">
             </video>
             <h1 style="display: none;" class="text">video could not be loaded</h1>
         </div>
@@ -74,8 +93,10 @@
         <?php
         $type = "text";
         $filecontent = file_get_contents($file_url);
+        echo $filecontent;
+        echo $file_url;
         if ($filecontent) {
-            echo htmlspecialchars(file_get_contents($file_url));
+            echo htmlspecialchars($filecontent);
         } else {
             die("ERROR: ACCESS TO FILE REJECTED");
         }
@@ -222,7 +243,6 @@
     <!-- scripting -->
 
     <script>
-        this.focus();
         let opacity = <?php echo $default_opactiy; ?>;
         document.addEventListener("wheel", event => {
             if (event.buttons == 4 || event.buttons == 1) {
@@ -247,7 +267,9 @@
         <?php
         if ($type == "video") {
         ?>
-
+            function settime(e){
+                document.querySelector("#range").value = e.currentTime * 1000;
+            }
             function setvideotime(e) {
                 document.querySelector("#range").max = e.duration * 1000;
             }

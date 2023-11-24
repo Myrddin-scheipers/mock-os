@@ -1,0 +1,11 @@
+body {
+    background-color: #161616;
+}
+a {
+    color: #fff;
+    display: block;
+}
+nav a {
+    color: #fff;
+    display: flex;
+}

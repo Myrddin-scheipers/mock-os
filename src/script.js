@@ -5,7 +5,7 @@ let title;
 let batteryelem;
 let loader;
 let data;
-let version = 0.16;
+let version = 0.19;
 const disabled = {
   sleepmode: false,
   filters: false,
@@ -13,80 +13,50 @@ const disabled = {
   files: false,
   apps: false,
 };
-if ("mediaSession" in navigator) {
-  navigator.mediaSession.metadata = new MediaMetadata({
-    title: "nom nom",
-    artist: "mier",
-    album: "The Ultimate Collection (Remastered)",
-    artwork: [
-      {
-        src: "./favicon.ico",
-        sizes: "500x500",
-        type: "image/ico",
-      },
-    ],
-  });
-}
-if (location.protocol !== "https:") {
-  location.replace(
-    `https:${location.href.substring(location.protocol.length)}`
-  );
-}
+// if (location.protocol !== "https:") {
+//   location.replace(
+//     `https:${location.href.substring(location.protocol.length)}`
+//   );
+// }
 function eraseCookie(name) {
   document.cookie = name + "=; Max-Age=-99999999;";
 }
-function resetsystem() {
-  system = true;
-  if (system) {
-    let loader = document.querySelector(".loader");
-    loader.style.display = "flex";
-    loader.querySelector("p").innerHTML = "clearing data";
-    let width = 0;
-    localStorage.clear();
-    eraseCookie("app_list");
-    setInterval(() => {
-      width = width + 100 / 20;
-      loader.querySelector("#pc_loader").style.width = width + "%";
-    }, 60);
-    setTimeout(() => {
-      window.location.reload();
-    }, 20 * 60);
-  }
-}
-if (localStorage.getItem("version")) {
-  if (localStorage.getItem("version") == version) {
-    // current version
-  } else {
-    // old version (check stuff)
-    document.querySelector(".loader p").innerHTML = "updating system";
-    warn_link_button(
-      "new version",
-      "check new features",
-      `${
-        window.location.protocol + "//" + window.location.host
-      }/assets/update/log.json`
-    );
-    localStorage.setItem("version", version);
-  }
-} else {
-  // first visit
-  document.querySelector(".loader p").innerHTML = "preparing system";
-  localStorage.setItem("version", version);
-}
+// ** fallbacks ** //
+// fallback for apps (to close themselves)
 function closewindow(what, isappname) {
   appwindow.close(what, isappname);
 }
+// fallback to open apps from inside apps
+function openapp(a, b, c) {
+  desktop.openApp(a, b, c);
+}
 window.addEventListener("contextmenu", (e) => e.preventDefault());
-app_name_top = document.querySelector("#app_name");
-windowelem = document.querySelector(".window");
-dockparent = document.getElementsByClassName("dock-parent")[0];
-title = document.querySelector(".title");
-close = document.querySelector(".close_tab");
-batteryelem = document.getElementById("battery");
-loader = document.getElementById("pc_loader");
-data = windowelem.getAttribute("data-window");
-let dockelem = document.querySelector(".dock-container");
-let checkboxes = document.querySelectorAll("input[type=checkbox]");
+let checkboxes, dockelem;
+window.addEventListener("DOMContentLoaded", function () {
+  app_name_top = document.querySelector("#app_name");
+  windowelem = document.querySelector(".window");
+  dockparent = document.getElementsByClassName("dock-parent")[0];
+  title = document.querySelector(".title");
+  close = document.querySelector(".close_tab");
+  loader = document.getElementById("pc_loader");
+  data = windowelem.getAttribute("data-window");
+  dockelem = document.querySelector(".dock-container");
+  checkboxes = document.querySelectorAll("input[type=checkbox]");
+  for (let i = 0; i < checkboxes.length; i++) {
+    checkboxes[i].addEventListener("change", function () {
+      let checking;
+      if (this.checked == true) {
+        checking = true;
+      } else {
+        checking = false;
+      }
+      checkboxes.forEach((checkbox) => {
+        checkbox.checked = false;
+      });
+      this.checked = checking;
+    });
+  }
+});
 // logs actions to revert
 const actionhistory = [];
 function sleep(ms) {
@@ -126,42 +96,110 @@ function loop(battery) {
     batteryelem.innerHTML = battery + ' <i class="fas fa-battery-full"></i>';
   }, 4000);
 }
-function dragElement(elmnt) {
+let dir = false;
+function onborder(event) {
+  let crop = event.target.closest(".crop");
+  if (crop != undefined) {
+    if (event.target.dataset.dir != undefined) {
+      dir = event.target.dataset.dir;
+      return dir;
+    }
+  }
+  return false;
+}
+function dragElement(elmnt, event) {
+  let dirhandler, horizontal, vertical, move, resize;
   appwindow.setactive(elmnt);
-  elmnt.classList.add("grab");
   let pos1 = 0,
     pos2 = 0,
     pos3 = 0,
     pos4 = 0;
   // otherwise, move the DIV from anywhere inside the DIV:
-  let iframes = document.querySelectorAll("iframe");
-  for (let i = 0; iframes.length > i; i++) {
-    iframes[i].style.pointerEvents = "none";
-  }
   elmnt.onmousedown = dragMouseDown;
 
   function dragMouseDown(e) {
-    e = e || window.event;
-    e.preventDefault();
     // get the mouse cursor position at startup:
     pos3 = e.clientX;
     pos4 = e.clientY;
+    move = false;
+    resize = false;
+    if (onborder(e)) {
+      resize = true;
+      dir = onborder(e);
+    } else {
+      move = true;
+      elmnt.classList.add("grab");
+    }
     document.onmouseup = function (e) {
       closeDragElement(e, pos3, pos4);
     };
+    dirhandler = elmnt.closest(".window").querySelector(`[data-dir='${dir}']`);
+    if (move == true) {
+      document.onmousemove = elementDrag;
+    } else if (resize == true) {
+      document.onmousemove = elementSize;
+    } else {
+      ui_warn("resize and move not set");
+    }
     // call a function whenever the cursor moves:
-    document.onmousemove = elementDrag;
   }
-
-  function elementDrag(e) {
+  function elementSize(e) {
     e = e || window.event;
     e.preventDefault();
     // calculate the new cursor position:
-    elmnt.style.opacity = "0.5";
+    // moved relative
+    pos1 = pos3 - e.clientX;
+    pos2 = pos4 - e.clientY;
+    // position abs
+    pos3 = e.clientX;
+    pos4 = e.clientY;
+    // set the element's new height & pos (if x or y got smaller)
+
+    ////////////////////////////////
+    /////  ADD CORRECT CHECKS //////
+    ////////////////////////////////
+    let x = elmnt.getBoundingClientRect().left + pos1;
+    let y = elmnt.getBoundingClientRect().top + pos2;
+    let w = elmnt.offsetWidth + pos1;
+    let h = elmnt.offsetHeight + pos2;
+    if (dir == "u" || dir == "d") {
+      dirhandler.style.height = "50%";
+      vertical = true;
+      if (dir == "d") {
+        h = h - 2 * pos2;
+      } else {
+        elmnt.style.top = pos4 + "px";
+      }
+      elmnt.style.height = h + "px";
+    } else if (dir == "l" || dir == "r") {
+      dirhandler.style.width = "50%";
+      horizontal = true;
+
+      if (dir == "r") {
+        w = w - 2 * pos1;
+      } else {
+        elmnt.style.left = pos3 + "px";
+      }
+      elmnt.style.width = w + "px";
+    } else {
+      return;
+    }
+    ////////////////////////////////
+    ///  END ADD CORRECT CHECKS ////
+    ////////////////////////////////
+  }
+  function elementDrag(e) {
+    e = e || window.event;
+    e.preventDefault();
+    // show moving style
+    elmnt.style.opacity = "0.7";
+    // calculate the new cursor position:
     pos1 = pos3 - e.clientX;
     pos2 = pos4 - e.clientY;
     pos3 = e.clientX;
     pos4 = e.clientY;
+    let pos5 = 30;
+    let pos6 = 0;
     // set the element's new position:
     let heightfromtop = elmnt.offsetTop + elmnt.clientHeight;
     let widthfromleft = elmnt.offsetLeft + elmnt.clientWidth;
@@ -190,23 +228,31 @@ function dragElement(elmnt) {
     elmnt.style.left = pos6 + "px";
     for (let i = 0; i < resizezones.length; i++) {
       const resize = resizezones[i];
-      if (resize.x.start <= pos3 && resize.x.end >= pos3 && resize.y.start <= pos4 && resize.y.end >= pos4) {
+      if (
+        resize.x.start <= pos3 &&
+        resize.x.end >= pos3 &&
+        resize.y.start <= pos4 &&
+        resize.y.end >= pos4
+      ) {
         let div = document.createElement("div");
-        div.style.position = "fixed";
-        div.style.background = "rgba(0,0,0,0.5)";
-        div.style.left = resize.result.xpos + "px";
-        div.style.top = resize.result.ypos + "px";
-        div.style.width = resize.result.width + resize.result.measure[0];
-        div.style.height = resize.result.height + resize.result.measure[0];
+        let r = resize.result;
+        div.style.left = r.xpos + "px";
+        div.style.top = r.ypos + 30 + "px";
+        div.style.width = r.width + r.measure[0];
+        div.style.height = `calc(${r.height + r.measure[1]} - 45px)`;
+        div.style.borderTopLeftRadius = r.border[0] + "px";
+        div.style.borderTopRightRadius = r.border[1] + "px";
+        div.style.borderBottomLeftRadius = r.border[2] + "px";
+        div.style.borderBottomRightRadius = r.border[3] + "px";
         div.setAttribute("class", "preview");
         let previews = document.querySelectorAll(".preview");
-        previews.forEach(preview => {
-            preview.remove();
+        previews.forEach((preview) => {
+          preview.remove();
         });
         document.body.appendChild(div);
-      }else{
+      } else {
         let previews = document.querySelectorAll(".preview");
-        previews.forEach(preview => {
+        previews.forEach((preview) => {
           setTimeout(() => {
             preview.remove();
           }, 750);
@@ -225,11 +271,13 @@ function dragElement(elmnt) {
         end: (window.innerHeight / 100) * 85,
       },
       result: {
-        measure: ["%", "%"],
-        height: 100,
+        measure: ["%", "px"],
+        height: window.innerHeight - 45,
         width: 50,
         xpos: 0,
-        ypos: 30,
+        ypos: 0,
+        // top L, top R, Bottom L, bottom R
+        border: [0, 8, 0, 8],
       },
     },
     {
@@ -246,7 +294,8 @@ function dragElement(elmnt) {
         height: 50,
         width: 50,
         xpos: 0,
-        ypos: 30,
+        ypos: 0,
+        border: [0, 8, 8, 8],
       },
     },
     {
@@ -259,11 +308,12 @@ function dragElement(elmnt) {
         end: 30,
       },
       result: {
-        measure: ["%", "%"],
-        height: 100,
+        measure: ["%", "px"],
+        height: window.innerHeight - 45,
         width: 100,
         xpos: 0,
-        ypos: 30,
+        ypos: 0,
+        border: [0, 0, 0, 0],
       },
     },
     {
@@ -280,7 +330,8 @@ function dragElement(elmnt) {
         height: 50,
         width: 50,
         xpos: 0,
-        ypos: (window.innerHeight / 100) * 50,
+        ypos: (window.innerHeight / 100) * 50 - 45,
+        border: [8, 8, 0, 8],
       },
     },
     {
@@ -297,7 +348,8 @@ function dragElement(elmnt) {
         height: 50,
         width: 50,
         xpos: (window.innerWidth / 100) * 50,
-        ypos: (window.innerHeight / 100) * 50,
+        ypos: (window.innerHeight / 100) * 50 - 45,
+        border: [8, 8, 8, 0],
       },
     },
     {
@@ -314,7 +366,8 @@ function dragElement(elmnt) {
         height: 50,
         width: 50,
         xpos: (window.innerWidth / 100) * 50,
-        ypos: 30,
+        ypos: 0,
+        border: [8, 0, 8, 8],
       },
     },
     {
@@ -327,57 +380,59 @@ function dragElement(elmnt) {
         end: (window.innerHeight / 100) * 85,
       },
       result: {
-        measure: ["%", "%"],
-        height: 100,
+        measure: ["%", "px"],
+        height: window.innerHeight - 45,
         width: 50,
         xpos: (window.innerWidth / 100) * 50,
-        ypos: 30,
+        ypos: 0,
+        border: [8, 0, 8, 0],
       },
     },
   ];
   function closeDragElement(e, x, y) {
-    let iframes = document.querySelectorAll("iframe");
-    for (let i = 0; iframes.length > i; i++) {
-      iframes[i].style.pointerEvents = "auto";
+    if (horizontal == true) {
+      dirhandler.style.width = "10px";
+      horizontal = false;
+    }
+    if (vertical == true) {
+      dirhandler.style.height = "10px";
+      vertical = false;
     }
     // stop moving when mouse button is released:
     document.onmouseup = null;
     document.onmousemove = null;
     elmnt.classList.remove("grab");
     desktop.getActiveApp().style.opacity = "1";
-    for (let i = 0; i < resizezones.length; i++) {
-      const resize = resizezones[i];
-      if (
-        resize.x.start <= x &&
-        resize.x.end >= x &&
-        resize.y.start <= y &&
-        resize.y.end >= y
-      ) {
-        let the = resize.result;
-        resize_window(
-          e,
-          the.width,
-          the.height,
-          the.measure[0],
-          the.xpos,
-          the.ypos
-        );
-        break;
+    if (move == true) {
+      // moved so resize ok
+      for (let i = 0; i < resizezones.length; i++) {
+        const resize = resizezones[i];
+        if (
+          resize.x.start <= x &&
+          resize.x.end >= x &&
+          resize.y.start <= y &&
+          resize.y.end >= y
+        ) {
+          let the = resize.result;
+          resize_window(
+            e,
+            the.width,
+            the.height,
+            the.measure,
+            the.xpos,
+            the.ypos
+          );
+          break;
+        }
       }
+    } else {
+      // not moved so dont resize with shortcuts
     }
   }
 }
 /*-------------------------------------------*/
 /*------Event-Listeners----------------------*/
 /*-------------------------------------------*/
-
-dockelem.addEventListener("click", async (event) => {
-  if (event.target.hasAttribute("data-window")) {
-    openapp(event.target.getAttribute("data-window"), event);
-  } else if (event.target.children[0].hasAttribute("data-window")) {
-    openapp(event.target.childNodes[0].getAttribute("data-window"), event);
-  }
-});
 if (localStorage.getItem("background")) {
   fetch(localStorage.getItem("background"))
     .then((res) => res.blob())
@@ -409,30 +464,12 @@ if (!localStorage.getItem("size")) {
   }
 }
 /*-------------------------------------------*/
-/*------Call-Some-Functions-Before-Load------*/
-/*-------------------------------------------*/
-setInterval(menutime, 1000);
-/*-------------------------------------------*/
 /*------Check-Some-Things-Before-Load--------*/
 /*-------------------------------------------*/
-for (let i = 0; i < checkboxes.length; i++) {
-  checkboxes[i].addEventListener("change", function () {
-    let checking;
-    if (this.checked == true) {
-      checking = true;
-    } else {
-      checking = false;
-    }
-    checkboxes.forEach((checkbox) => {
-      checkbox.checked = false;
-    });
-    this.checked = checking;
-  });
-}
-/*-------------------------------------------*/
-/*--------------No logging for prod----------*/
-/*-------------------------------------------*/
 
+/*-------------------------------------------*/
+/*-----------No logging for production-------*/
+/*-------------------------------------------*/
 let DEBUG = true;
 if (!DEBUG) {
   if (!window.console) window.console = {};
@@ -448,34 +485,59 @@ if (!DEBUG) {
 /*-------------------------------------------*/
 /*--------------End of onload----------------*/
 /*-------------------------------------------*/
-window.onoffline = (event) => {
-  let wifielem = document.getElementById("wifi");
-  wifielem.innerHTML = '<i class="bi bi-wifi-off"></i>';
-};
-window.ononline = (event) => {
-  let wifielem = document.getElementById("wifi");
-  wifielem.innerHTML = '<i class="bi bi-wifi"></i>';
-};
 window.addEventListener("keydown", shortcuts);
 window.addEventListener("keyup", shortcuts);
+
+const keys = {}
+
+window.addEventListener('keydown', (ev) => {
+  keys[ev.key] = true;
+  if(keys['Control']){
+    ev.preventDefault();
+  }
+})
+
+window.addEventListener('keyup', (ev) => {
+  if (keys['Control']){
+    if(keys['ArrowLeft']){
+      resize_window(null, 50, 100, ["%", "%"], 0, 0)
+    }else if(keys['s']){
+      ev.preventDefault();
+      window.top.openapp('crApp store', false);
+    }
+  }else if (keys['Alt'] && keys['w']) {
+    ev.preventDefault();
+    appwindow.close(document.querySelector(".active"), 0);
+  } else if (keys['Enter']) {
+    if(document.activeElement){
+      ev.preventDefault();
+      document.activeElement.click();
+      if(document.activeElement.closest(".group")){
+        // click 2 times for files
+        document.activeElement.click();
+      }
+    }
+  }else if(keys['Delete']){
+    ev.preventDefault();
+    if(document.activeElement.closest(".files .group")){
+      document.activeElement.closest(".files .group").remove();
+    }
+  }else{
+    // no keys for it
+  }
+  keys[ev.key] = false
+})
+
 function shortcuts(event) {
-  console.log(event, event.key);
   if (event.type == "keydown") {
-    if (
-      (event.shiftKey && event.key.toLowerCase() == "f4") ||
-      (event.altKey && event.key.toLowerCase() == "w")
-    ) {
-      //close event
-      appwindow.close(document.querySelector(".active"), 0);
-      event.preventDefault();
-    } /* else if (event.key == "F3" || (event.ctrlKey && event.key == "f")) {
-      //search event
-      event.preventDefault();
-    } */ else if (event.shiftKey && event.key.toLowerCase() == "d") {
-      // duplicate event
+    if (event.key.toLowerCase() == "escape") {
+      resetfiles();
+      hidecontext();
+    } else if (event.shiftKey && event.key.toLowerCase() == "d") {
+      // duplicate function
       duplicate();
       event.preventDefault();
-    } else if (event.ctrlKey && event.key.toLowerCase() == "b") {
+    } else if (event.altKey && event.key.toLowerCase() == "b") {
       //background change
       event.preventDefault();
       desktop.showFilepicker();
@@ -492,171 +554,12 @@ function shortcuts(event) {
   } else if (event.type == "keyup") {
     if (event.altKey && event.code == "KeyS") {
       event.preventDefault();
-      takeScreenShot();
-    }
-    if (event.key.toLowerCase() == "tab") {
-      event.preventDefault();
-      if (document.querySelector(".active").nextElementSibling) {
-        document
-          .querySelector(".active")
-          .nextElementSibling.classList.add("active");
-        document.querySelector(".active").classList.remove("active");
-      } else {
-        let active = document.querySelector(".active");
-        active.classList.remove("active");
-        active.parentElement.firstElementChild.classList.add("active");
-      }
+      desktop.screenShot();
     } else if (event.shiftKey && event.key.toLowerCase() == "f11") {
       appwindow.fullscreen(document.querySelector(".window.active"));
     }
   }
 }
-async function openapp(name, event, data) {
-  if (disabled.apps) {
-    disabled_warn("apps");
-    return;
-  }
-  let out = [];
-  if (data) {
-    for (var key in data) {
-      if (data.hasOwnProperty(key)) {
-        out.push(key + "=" + encodeURIComponent(data[key]));
-      }
-    }
-
-    out.join("&");
-    out = "?" + out;
-  }
-  if (desktop.getActiveApp()) {
-    // select the active clicked app
-    windowelem = desktop.getActiveApp();
-  } else {
-    // if none, select the first window element and make it active
-    windowelem = document.querySelector(".window");
-    appwindow.setactive(windowelem);
-  }
-  if (document.querySelector(`.window[data-window='${name}']`)) {
-  }
-  if (
-    event.altKey ||
-    document.querySelector(".window").dataset.window == "boot"
-  ) {
-    // alt click to open in current window, instead of a new one
-  } else {
-    // make new window
-    duplicate();
-    windowelem = desktop.getActiveApp();
-  }
-  windowelem.setAttribute("data-window", name);
-  if (windowelem.classList.contains("fullscreen")) {
-    dockparent.classList.add("animation");
-  }
-  await fetch("./assets/frames/frames.php?q=" + name)
-    .then((response) =>
-      response.json().then((data) => ({ status: response.status, body: data }))
-    )
-    .then((json) => {
-      if (json.status == 200) {
-        // app exists
-        let app = json.body[0];
-        if (app.specialsize == true) {
-          console.log(app.specialsize);
-          // add custom style for special windows
-          let style = document.createElement("link");
-          style.setAttribute(
-            "href",
-            window.location.protocol +
-              "//" +
-              window.location.hostname +
-              "/assets/frames/" +
-              app.developer +
-              "/" +
-              app.name +
-              "/" +
-              app.custom_style
-          );
-          style.setAttribute("rel", "stylesheet");
-          document.head.appendChild(style);
-        }
-        let source;
-        if (!app.source.startsWith("https://")) {
-          // local app or unsafe
-          source =
-            "https://" +
-            window.location.hostname +
-            "/assets/frames/" +
-            app.developer +
-            "/" +
-            app.name +
-            "/" +
-            app.source;
-        } else {
-          // external url
-          source = app.source;
-        }
-        if (app.url == 0) {
-          app.url = "about:blank";
-        }
-        appwindow.changetitle(app.title, app.url, app.desc, windowelem);
-        let frame = windowelem.querySelector(".tab");
-        frame.setAttribute("src", "app_loader.html?app=" + source + out);
-        windowelem.classList.remove("minimize");
-        frame.addEventListener("load", function () {
-          frame.contentWindow.postMessage(settings, "*");
-        });
-      } else {
-        // empty app
-        let frame = windowelem.querySelector(".tab");
-        frame.setAttribute("src", "./assets/frames/no_app.html");
-        appwindow.changetitle(
-          name,
-          "about:blank",
-          "this has not been made yet",
-          windowelem
-        );
-        windowelem.classList.remove("minimize");
-      }
-    });
-}
-const takeScreenShot = async () => {
-  const stream = await navigator.mediaDevices.getDisplayMedia({
-    preferCurrentTab: true,
-    video: { mediaSource: "screen" },
-  });
-  // get correct video track
-  const track = stream.getVideoTracks()[0];
-  // init Image Capture and not Video stream
-  const imageCapture = new ImageCapture(track);
-  // take first frame only
-  const bitmap = await imageCapture.grabFrame();
-  // destory video track to prevent more recording / mem leak
-  track.stop();
-
-  const canvas = document.createElement("canvas");
-  // this could be a document.createElement('canvas') if you want
-  // draw weird image type to canvas so we can get a useful image
-  canvas.width = bitmap.width;
-  canvas.height = bitmap.height;
-  const context = canvas.getContext("2d");
-  context.drawImage(bitmap, 0, 0, bitmap.width, bitmap.height);
-  const image = canvas.toDataURL();
-  desktop.showNotifications(
-    "screenshot taken",
-    "screenshot made",
-    image,
-    false
-  );
-  // this turns the base 64 string to a [File] object
-  const res = await fetch(image);
-  const buff = await res.arrayBuffer();
-  // clone so we can rename, and put into array for easy proccessing
-  const file = [
-    new File([buff], `photo_${new Date()}.jpg`, {
-      type: "image/jpeg",
-    }),
-  ];
-  return file;
-};
 function duplicate() {
   let clone_origin;
   if (desktop.getActiveApp()) {
@@ -668,19 +571,23 @@ function duplicate() {
   cloned = clone_origin.childNodes[0].parentNode.cloneNode(true);
   cloned.classList.add("active");
   clone_origin.classList.remove("active");
+  cloned.style.width = "";
+  cloned.style.height = "";
+  cloned.style.left = "";
+  cloned.style.top = "";
   document.body.appendChild(cloned);
 }
-function resize_window(target, xdim, ydim, unit, xpos, ypos) {
+function resize_window(target, xdim, ydim, units, xpos, ypos) {
   target = desktop.getActiveApp();
   windowelem.classList.remove("fullscreen");
   dockparent.classList.remove("animation");
   if (target == null || undefined) {
-    target = document.querySelector(".active");
+    target = document.querySelector(".window.active");
   } else {
-    target.style.width = `${xdim}${unit}`;
+    target.style.width = `${xdim}${units[0]}`;
+    target.style.height = `calc(${ydim}${units[1]} - 45px)`;
     target.style.left = `${xpos}px`;
-    target.style.height = `calc(${ydim}${unit} - 30px)`;
-    target.style.top = `${ypos}px`;
+    target.style.top = `calc(${ypos}px + 30px)`;
   }
 }
 function disabled_warn(what) {
@@ -711,23 +618,28 @@ function invert(elem) {
   document.querySelector(elem).classList.toggle("inverted");
 }
 function filter(prop, value, type) {
-  settings.filterScreen(prop, value, type);
+  deviceSettings.filterScreen(prop, value, type);
 }
 
 // event listeners
-
+function nopurposeelent(element) {
+  if (element.closest(".alerts")) {
+    return true;
+  }
+  if (element.closest(".files")) {
+    return true;
+  }
+  return false;
+}
 document.body.addEventListener("mousedown", function (e) {
   let element = e.target;
-  if (
-    element.classList.contains("title") ||
-    element.classList.contains("actions")
-  ) {
-    dragElement(e.target.parentElement.parentElement);
-  } else if (
-    element.parentElement.classList.contains("title") ||
-    element.parentElement.classList.contains("actions")
-  ) {
-    dragElement(e.target.parentElement.parentElement.parentElement);
+  if (element.closest(".window")) {
+    dragElement(e.target.closest(".window"), e);
+  } else if (e.target.tagName == "IFRAME") {
+    let iframes = document.querySelectorAll("iframe");
+    for (let i = 0; iframes.length > i; i++) {
+      iframes[i].style.pointerEvents = "auto";
+    }
   }
 });
 let autobrightness = false;
@@ -737,7 +649,7 @@ document.body.addEventListener("click", async function (e) {
   if (eclass.contains("close_tab")) {
     appwindow.close(element);
   } else if (eclass.contains("sir")) {
-    openapp("sir", e);
+    desktop.openApp("sir", e);
   } else if (eclass.contains("fullscreen_tab")) {
     appwindow.fullscreen(element);
   } else if (eclass.contains("invert")) {
@@ -746,7 +658,21 @@ document.body.addEventListener("click", async function (e) {
     desktop.fullscreen_page(document.body);
   } else if (e.target.closest(".auto_brightness")) {
     autobrightness = !autobrightness;
-    ui_warn("brightness", autobrightness);
+    let warn = autobrightness === true ? "enabled" : "disabled";
+    ui_warn("brightness", "automatic brightness " + warn);
+  } else if (element.closest("li")) {
+    // opens an app from applist
+    element = element.closest("li");
+    let img = element.querySelector("img");
+    if (img) {
+      if (img.hasAttribute("data-window")) {
+        if (img.getAttribute("data-window") !== "false") {
+          desktop.openApp(img.getAttribute("data-window"), e);
+        } else {
+          ui_warn("not an app", "this is not an app and cant be opened");
+        }
+      }
+    }
   }
 });
 
@@ -755,6 +681,8 @@ document.addEventListener("dblclick", async function (e) {
   let eclass = element.classList;
   if (eclass.contains("title")) {
     appwindow.fullscreen(element);
+  } else {
+    e.preventDefault();
   }
 });
 let brightness = document.querySelector(".name .auto_brightness");
@@ -766,10 +694,11 @@ if ("AmbientLightSensor" in window) {
     if (autobrightness == true) {
       filter("brightness", 50 + sensor.illuminance / 1000, "replace");
     }
-    console.log(event, sensor);
   });
   sensor.start();
 } else {
+  document.body.querySelector(".auto_brightness").style.display = "none";
+  // hide auto brightness
 }
 
 document.addEventListener("fullscreenchange", function (e) {
@@ -782,468 +711,23 @@ document.addEventListener("fullscreenchange", function (e) {
 // When the toggle button is clicked, enter/exit fullscreen
 document.addEventListener("change", function (e) {
   if (e.target.closest("#logo")) {
-    let name = document.querySelector("#app_name").innerText;
-    document.querySelector(".appname").innerHTML = "Force quit " + name;
-    if (name.toLowerCase() == "home") {
-      document.querySelector(".appname").style.display = "none";
-    } else {
-      document.querySelector(".appname").style.display = "block";
-    }
+    desktop.setwindowname(appwindow.title);
   } else if (e.target.closest("#fileupload")) {
     desktop.setNewBackground(document.querySelector("#fileupload").files[0]);
   }
 });
-const registerServiceWorker = async () => {
-  if ("serviceWorker" in navigator) {
-    try {
-      const registration = await navigator.serviceWorker.register("/sw.js", {
-        scope: "/",
-      });
-      if (registration.installing) {
-        // console.log("Service worker installing");
-      } else if (registration.waiting) {
-        // console.log("Service worker installed");
-      } else if (registration.active) {
-        // console.log("Service worker active");
-      }
-    } catch (error) {
-      // console.error(`Registration failed with ${error}`);
-    }
-  }
-};
-let desktop, settings, appwindow;
-window.addEventListener("load", function () {
-  settings = new Settings();
-  desktop = new Desktop();
-  desktop.load();
-  appwindow = new Window("Home", "about:blank", "Home");
-  appwindow.load(document.querySelector("iframe"));
-  registerServiceWorker();
-});
-class Settings {
-  constructor() {
-    (this.dock = {
-      float: false,
-    }),
-      (this.colors = {
-        effect: "#e9aa02",
-        mainText: "#ffffff",
-        reversedText: "#000000",
-      }),
-      (this.background = {
-        color: "#212121",
-        image: "./assets/images/bg.png",
-      }),
-      (this.screen = {
-        autoBrightness: false,
-        brightness: 100,
-        saturation: 100,
-        contrast: false,
-      }),
-      (this.files = {
-        size: Math.abs(document.querySelector(".slider.filesize").value) / 10,
-        image: {
-          folder: "",
-          txt: "",
-        },
-      });
-  }
-  set(settings) {
-    if (settings) {
-      for (const [key, value] of Object.entries(settings)) {
-        this[key] = value;
-      }
-    }
-    this.changeBackground(this.background.image);
-    document
-      .querySelector(":root")
-      .style.setProperty("--main-effect", this.colors.effect);
-    document
-      .querySelector(":root")
-      .style.setProperty("--main-text", this.colors.mainText);
-    document
-      .querySelector(":root")
-      .style.setProperty("--reversed-text", this.colors.reversedText);
-    document
-      .querySelector(":root")
-      .style.setProperty("--file-columns", this.files.size);
-    document
-      .querySelector(":root")
-      .style.setProperty("--background-color", this.background.color);
-  }
-  reset(prop) {
-    let slider = document.querySelector(`.slider.${prop}`);
-    if (slider != null || slider != undefined) {
-      slider.value = slider.defaultValue;
-      slider.oninput();
-    }
-  }
-  changeBackground(background) {
-    this.background.image = background;
-    document
-      .querySelector(":root")
-      .style.setProperty("--background", `url(${this.background.image})`);
-  }
-  filterScreen(prop, value, type) {
-    if (disabled.filters) {
-      disabled_warn("filters");
-    }
-    if (type == "toggle") {
-      // -1 means not found => confusing
-      if (document.body.style.filter.indexOf(`${prop}(${value}%)`) !== -1) {
-        document.body.style.filter = document.body.style.filter.replaceAll(
-          `${prop}(${value}%)`,
-          ""
-        );
-      } else {
-        document.body.style.filter =
-          document.body.style.filter + `${prop}(${value}%)`;
-      }
-    } else if (type == "add") {
-      document.body.style.filter += `${prop}(${value}%)`;
-    } else if (type == "remove") {
-      document.body.style.filter = document.body.style.filter.replace(
-        `${prop}(${value}%)`,
-        ""
-      );
-    } else if (type == "replace") {
-      let regex = prop + "\\(.+?%\\)";
-      let tofind = new RegExp(regex, "g");
-      console.log(
-        tofind.toString(),
-        document.body.style.filter.match(tofind),
-        document.body.style.filter
-      );
-      document.body.style.setProperty(
-        "filter",
-        document.body.style.filter.replaceAll(tofind, "")
-      );
-      document.body.style.filter += `${prop}(${value}%)`;
-    } else {
-      return;
-    }
-  }
-}
-class Desktop extends Settings {
-  constructor() {
-    super();
-    this.amountloads = 0;
-    this.frame = document.querySelector("iframe");
-  }
-  loading(isLoading) {
-    if (isLoading == true) {
-      this.amountloads++;
-    } else {
-      this.amountloads--;
-    }
-    if (this.amountloads >= 1) {
-      document.body.classList.add("loading");
-    } else {
-      document.body.classList.remove("loading");
-    }
-  }
-  getActiveApp(needresult) {
-    if (document.querySelector(".window.active")) {
-      return document.querySelector(".window.active");
-    } else {
-      if (needresult) {
-        return document.querySelector(".window");
-      } else {
-        return false;
-      }
-    }
-  }
-  showNotifications(title, body, icon, interaction) {
-    let notification = document.querySelector(".notification");
-    if (icon == false || icon == "") {
-      icon = "./favicon.ico";
-      notification.querySelector("img").style.display = "none";
-    } else {
-      notification.querySelector("img").style.display = "block";
-    }
-    Notification.requestPermission(async function (result) {
-      if (result === "granted") {
-        let notification;
-        if (interaction == true) {
-          notification = navigator.serviceWorker.ready.then(function (
-            registration
-          ) {
-            registration.showNotification(title, {
-              body: body,
-              icon: icon,
-              requireInteraction: true,
-              tag: "mock os",
-            });
-          });
-        } else {
-          notification = navigator.serviceWorker.ready.then(function (
-            registration
-          ) {
-            registration.showNotification(title, {
-              body: body,
-              icon: icon,
-              requireInteraction: false,
-              tag: "mock os",
-            });
-          });
-        }
-        notification.onclick = (event) => {
-          event.preventDefault(); // prevent the browser from focusing the Notification's tab
-          window.open(icon, "_blank");
-        };
-      } else {
-        notification.querySelector("img").src = icon;
-        notification.querySelector("h3").innerHTML = title;
-        notification.querySelector("p").innerHTML = body;
-        notification.classList.add("open");
-        await sleep(5000);
-        notification.classList.remove("open");
-      }
-    });
-  }
-  getOpenApps() {}
-  setOpenApps() {}
-  showFilepicker() {
-    let backgroundinput = document.getElementById("fileupload");
-    backgroundinput.click();
-  }
-  setNewBackground(file) {
-    if (file == undefined) {
-      desktop.showNotifications(
-        "unable to save background",
-        "background image not found",
-        false,
-        false
-      );
-      return;
-    }
-    if (file.size > Number(localStorage.getItem("size")) * 1024) {
-      desktop.showNotifications(
-        "background image '" + file.name + "' too big",
-        "the file is too big to be saved, restarting will not keep this background",
-        false,
-        false
-      );
-    }
-    if (file.type.match("image.*")) {
-      document.querySelector(".videobg").src = "#";
-      super.changeBackground(
-        URL.createObjectURL(document.getElementById("fileupload").files[0])
-      );
-      const reader = new FileReader();
 
-      reader.readAsDataURL(document.getElementById("fileupload").files[0]);
-
-      reader.addEventListener("load", () => {
-        if (!(file.size > Number(localStorage.getItem("size")) * 1024)) {
-          localStorage.setItem("background", reader.result);
-        }
-      });
-    } else if (file.type.match("video.*")) {
-      readvideobg();
-      return;
-    } else {
-      return;
-    }
-  }
-  async load() {
-    super.set();
-    this.loading(true);
-    // check if system is disabled or not
-    if (disabled.system) {
-      disabled_warn("system");
-    }
-    // set background
-    if (localStorage.getItem("background")) {
-      fetch(localStorage.getItem("background"))
-        .then((res) => res.blob())
-        .then((blob) => {
-          settings.changeBackground(URL.createObjectURL(blob));
-        });
-    }
-    document.querySelector(".loader p").style.display = "block";
-    // set battery information
-    this.batteryinfo();
-    // show loader
-    let i = 0;
-    loader.style.width = 0;
-    let loaderwidth = loader.style.width.replace("%", "");
-    loaderwidth = loaderwidth.replace("px", "");
-    loaderwidth = Number(loaderwidth);
-    while (100 > i) {
-      i = i + Math.random() * 5;
-      await sleep(0);
-      loader.style.width = `${i}%`;
-    }
-    await sleep(200);
-    loader.parentElement.parentElement.style.display = "none";
-    actionhistory.length = 0;
-    this.loading(false);
-  }
-  async batteryinfo() {
-    if (navigator.getBattery != null) {
-      await navigator.getBattery().then((battery) => {
-        function updateAllBatteryInfo() {
-          updateLevelInfo();
-        }
-        updateAllBatteryInfo();
-        battery.addEventListener("levelchange", () => {
-          updateLevelInfo();
-        });
-        setInterval(checkbattery, 5000);
-
-        function checkbattery() {
-          if (battery.charging && Math.round(battery.level * 100) != 100) {
-            loop(Math.round(battery.level * 100));
-          }
-        }
-        function updateLevelInfo() {
-          let level = battery.level * 100;
-          level = Math.round(Number(level));
-          if (level < 10) {
-            batteryelem.innerHTML =
-              level + '<i class="fas fa-battery-empty"></i>';
-          }
-          if (level >= 10 && battery.level < 30) {
-            batteryelem.innerHTML =
-              level + '<i class="fas fa-battery-quarter"></i>';
-          }
-          if (level >= 30 && battery.level < 60) {
-            batteryelem.innerHTML =
-              level + '<i class="fas fa-battery-half"></i>';
-          }
-          if (level >= 60 && battery.level < 90) {
-            batteryelem.innerHTML =
-              level + '<i class="fas fa-battery-three-quarters"></i>';
-          }
-          if (level > 90) {
-            batteryelem.innerHTML =
-              level + '<i class="fas fa-battery-full"></i>';
-          }
-        }
-      });
-    } else {
-      batteryelem.innerHTML = '<i class="fas fa-battery-empty"></i>';
-    }
-  }
-  setwindowname(data) {
-    app_name_top.innerHTML = data;
-  }
-  async share() {
-    let shareData = {
-      title: "Mock os",
-      text: "check this out",
-      url: window.location.href,
-    };
-    try {
-      await navigator.share(shareData);
-    } catch (err) {
-      ui_warn("error", err);
-    }
-  }
-  fullscreen_page(element) {
-    if (document.fullscreenElement) {
-      // exitFullscreen is only available on the Document object.
-      document.exitFullscreen();
-    } else {
-      element.requestFullscreen();
-    }
-  }
-}
-class Window extends Desktop {
-  constructor(title, desc, url, style) {
-    super();
-    this.title = title;
-    this.desc = desc;
-    this.url = url;
-    this.style = style;
-  }
-  async share(target) {
-    if (e.target.closest(".window")) {
-      target = e.target.closest(".window");
-    } else {
-      return "not valid shared";
-    }
-    let shareData = {
-      title: target.dataset.window,
-      text: "check this out",
-      url: window.location.href,
-    };
-    try {
-      await navigator.share(shareData);
-    } catch (err) {
-      ui_warn("error", err);
-    }
-  }
-  changetitle(windowname, windowurl, windowdesc, target) {
-    null == windowname ? (this.title = "Home") : (this.title = windowname);
-    null == windowurl ? (this.url = "about:blank") : (this.url = windowurl);
-    null == windowdesc ? (this.desc = undefined) : (this.desc = windowdesc);
-    target.querySelector(
-      ".title"
-    ).innerHTML = `<a target='_blank' href='${this.url}'>${this.title}: ${this.desc}</a> 🔍`;
-    super.setwindowname(this.title);
-    return;
-  }
-  fullscreen(event) {
-    event = event.closest(".window");
-    event.setAttribute("style", "");
-    if (dockparent.classList.contains("animation")) {
-      event.classList.remove("fullscreen");
-      dockparent.classList.remove("animation");
-    } else {
-      event.classList.add("fullscreen");
-      dockparent.classList.add("animation");
-    }
-  }
-  hidetab(tab) {
-    if (tab == "all") {
-      let windows = document.querySelectorAll(".window");
-      windows.forEach((element) => {
-        element.classList.add("minimize");
-      });
-    } else {
-      tab.closest(".window").classList.add("minimize");
-    }
-  }
-  close(tab, isappname) {
-    window.top[0].focus();
-    if (isappname) {
-      tab = document.querySelector(`#window[data-window=${tab}]`);
-    }
-    if (tab == "all") {
-      super.setwindowname("Home");
-      let windows = document.querySelectorAll(".window");
-      windows.pop();
-      windows.forEach((window) => {
-        if (document.querySelectorAll(".window").length > 1) {
-          window.remove();
-        } else {
-          window.classList.add("minimize");
-        }
-      });
-    } else if (document.querySelectorAll(".window").length > 1) {
-      tab.closest(".window").remove();
-    } else {
-      super.setwindowname("Home");
-      tab.closest(".window").classList.add("minimize");
-    }
-  }
-  load(target) {
-    target.contentWindow.focus();
-    target.style.visibility = "visible";
-  }
-  setactive(parent) {
-    let actives = document.querySelectorAll(".active");
-    actives.forEach((element) => {
-      element.classList.remove("active");
-    });
-    parent.classList.add("active");
-  }
-}
 window.onmessage = function (message) {
-  console.log(message.data);
-  settings.set(message.data);
+  if (message.data == "settings") {
+    // requested current settings
+    appwindow
+      .getActiveApp()
+      .querySelector("iframe")
+      .contentWindow.postMessage(deviceSettings, "*");
+  } else {
+    // change settings -> know its not secure
+    deviceSettings.set(message.data);
+  }
 };
 function readvideobg(evt) {
   let video = document.querySelector(".videobg");
@@ -1265,26 +749,15 @@ function readvideobg(evt) {
     alert("Failed to load file");
   }
 }
-function systemerror(name, message) {
-  let div = document.createElement("div");
-  let text = document.createElement("p");
-  text.style.fontSize = "4vw";
-  text.style.textAlign = "justify";
-  text.style.display = "flex";
-  text.style.alignItems = "center";
-  text.style.alignContent = "center";
-  text.style.width = "75%";
-  text.innerHTML = name + "<br>" + message;
-  div.appendChild(text);
-  div.style.display = "flex";
-  div.style.alignItems = "center";
-  div.style.justifyContent = "center";
-  div.style.top = "0px";
-  div.style.left = "0px";
-  div.style.height = "100vh";
-  div.style.width = "100vw";
-  div.style.position = "fixed";
-  div.style.zIndex = "152";
-  div.style.background = "var(--main-effect)";
-  document.body.appendChild(div);
-}
+//### LOAD DESKTOP ###//
+let desktop, appwindow;
+window.addEventListener("load", async function () {
+  desktop = new Desktop();
+  try {
+    await desktop.load();
+  } catch (error) {
+    desktop.error(error.name, error.message, error);
+  }
+  appwindow = new Window("Home", "about:blank", "Home");
+  appwindow.load(document.querySelector("iframe"));
+});

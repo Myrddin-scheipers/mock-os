@@ -57,7 +57,7 @@
       </div>
     </div>
   </div>
-  <?php require_once($_SERVER['DOCUMENT_ROOT'] . "/files.php"); ?>
+  <?php require_once($_SERVER['DOCUMENT_ROOT'] . "/_views/directory.php"); ?>
 </body>
 
 </html>

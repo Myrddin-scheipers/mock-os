@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="/developers/style.css">
+<h3>php</h3>
+<pre>
+<code>
+    &lt;script&gt;
+        &lt;?php require_once($_SERVER[&apos;DOCUMENT_ROOT&apos;] . &quot;/_scripts/settings.js&quot;); ?&gt;
+    &lt;/script&gt;
+</code>
+</pre>
+    <h3>javascript</h3>
+<pre>
+<code>
+    if(typeof Settings == 'undefined'){
+        let script = document.createElement('script')
+        script.src = window.location.origin + "/_scripts/settings.js";
+        document.getElementsByTagName('head')[0].appendChild(script)
+    }
+</code>
+</pre>

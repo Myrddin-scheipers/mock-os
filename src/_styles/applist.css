@@ -13,6 +13,7 @@
     z-index: 130;
   }
   .dock {
+    animation-name: show_dock;
     width: auto;
     height: 60px;
       border-radius: var(--radius);
@@ -26,20 +27,20 @@
     z-index: 130;
   }
   .animation.dock-parent~.dock {
-    bottom: -100px;
+    bottom: -200px;
     animation-delay: 500ms;
-    animation-name: fade_dock;
+    animation-name: hide_dock;
     animation-fill-mode: both;
-    animation-direction: reverse;
+    animation-direction: normal;
     animation-duration: 400ms;
   }
   
   .animation.dock-parent:hover~.dock,
-  .animation.dock-parent~.dock:hover {
-    bottom: -100px;
-    animation-name: fade_back_dock !important;
-    animation-fill-mode: forwards;
-    animation-direction: unset;
+  .animation.dock-parent~.dock:hover,
+  .animation.dock-parent~.dock *:hover {
+    animation-name: show_dock;
+    animation-fill-mode: both;
+    animation-direction: normal;
     animation-duration: 400ms;
   }
   
@@ -142,39 +143,30 @@
     height: calc(100% - 20px);
   }
   
-  .dock .dock-container ul li .ico-bin {
-    width: 94%;
-    height: 94%;
-    object-fit: cover;
-    transition: 0.2s;
-  }
-  
-  .dock .dock-container ul li .ico-bin:hover {
-    margin-left: 10px;
-  }
-  
   ul li:hover .name {
     visibility: visible !important;
   }
-  
-@keyframes fade_dock {
+  #bin {
+    border-left: 1px solid;
+    padding: 0px 16px;
+  }
+@keyframes show_dock {
   0% {
+    bottom: -200px;
     opacity: 0.5;
   }
-
   100% {
     bottom: 0px;
     opacity: 1;
   }
 }
-
-@keyframes fade_back_dock {
+@keyframes hide_dock {
   0% {
-    opacity: 0.5;
-  }
-
-  100% {
     bottom: 0px;
     opacity: 1;
   }
+    100% {
+    bottom: -200px;
+    opacity: 0.5;
+  } 
 }

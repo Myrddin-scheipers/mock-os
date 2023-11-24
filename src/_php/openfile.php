@@ -2,10 +2,20 @@
 <html lang="en">
 
 <head>
+<?php require_once("./curl_check.php")?>
+    <?php 
+    ?>
     <link rel="stylesheet" href="../cursors.css">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>File reader</title>
+    <title>Open file</title>
+    <script>
+        if(typeof Settings == 'undefined'){
+            let script = document.createElement('script')
+            script.src = "<?php echo $root . "_scripts/settings.js";?>";
+            document.getElementsByTagName('head')[0].appendChild(script)
+        }
+    </script>
     <link rel="stylesheet" href="../assets/css/iframes_content.css">
     <style>
         body {
@@ -30,17 +40,16 @@
         }
     </style>
 </head>
-<?php require_once("./curl_check.php")?>
 <body class="overflow">
     <?php
     $filename = $_GET["path"];
     $filename = filter_var($filename, FILTER_SANITIZE_URL);
     $file = "../" . $filename;
     $ext = pathinfo($file, PATHINFO_EXTENSION);
-    $file_url = "https://localhost/" . $filename;
+    $file_url = $protocol . "localhost/" . $filename;
     if (checkUrl($file_url) == true) {
     } else {
-        $file_url = "https://mier.helioho.st/" . $filename;
+        $file_url = $protocol . "mier.helioho.st/" . $filename;
     }
     $options = stream_context_create(array(
         "ssl" => array(
@@ -50,7 +59,7 @@
     ));
     $type = get_headers($file_url, 1, $options)["Content-Type"];
     if (is_dir($file) || is_array($type)) {
-        header('Location: ../app_loader.html?app=./files.php?path=' . $filename);
+        header('Location: ../app_loader.html?app=./_views/directory.php?path=' . $filename);
         die;
     } else {
         if (str_starts_with($type, "text/") || str_starts_with($type, "application/")) {
@@ -83,18 +92,9 @@
     }
     ?>
     <script defer>
-        this.focus();
-        let save = document.querySelector(".save");
-        if (save) {
-            save.addEventListener("dblclick", async function() {
-                let data = document.querySelector("code").innerText;
-                await fetch('../_php/savefile.php?path=<?php echo $file ?>&data=' + encodeURIComponent(data)).then(response => console.log(response))
-            })
-        }
         let opacity = <?php echo $default_opactiy; ?>;
         document.addEventListener("wheel", event => {
             if (event.buttons == 4 || event.buttons == 1) {
-                console.log(event.buttons)
                 if (document.documentElement.style.getPropertyValue("--a") == '') {
                     opacity = <?php echo $default_opactiy; ?>;
                 } else {

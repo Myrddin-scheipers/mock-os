@@ -1,13 +1,109 @@
-<div onmousedown="dragElement(this);" data-window="boot" id="window" class="window minimize resizable">
+<div tabindex="0" data-window="boot" id="window" class="window minimize resizable">
     <div class="top_menu">
         <div class="actions">
-            <div class="dot red close_tab"></div>
+            <div tabindex="0" class="dot red close_tab"></div>
             <div class="dot yellow minify_tab"></div>
-            <div class="dot green fullscreen_tab"></div>
+            <div tabindex="0" class="dot green fullscreen_tab"></div>
         </div>
         <div class="title">
         </div>
     </div>
     <iframe style="visibility:hidden;" src="about:blank" class="tab content">
     </iframe>
+    <div class="crop">
+        <div data-dir="u"  class="crop-line horizontal crop-top-line"></div>
+        <div data-dir="r" class="crop-line vertical crop-right-line"></div>
+        <div data-dir="d" class="crop-line horizontal crop-bottom-line"></div>
+        <div data-dir="l" class="crop-line vertical crop-left-line"></div>
+     
+        <div data-dir="ul" class="crop-corner crop-top-left-corner"></div>
+        <div data-dir="ur" class="crop-corner crop-top-right-corner"></div>
+        <div data-dir="br" class="crop-corner crop-bottom-right-corner"></div>
+        <div data-dir="bl" class="crop-corner crop-bottom-left-corner"></div>
+       </div>
 </div>
+<style>
+/*https://stackoverflow.com/questions/12967876/how-to-set-different-cursors-for-an-element-and-its-border*/
+.crop {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height: 100%;
+  transition: all 0.25s;
+}
+.window, .window *:not(.crop, .crop *){
+z-index: 125;
+}
+.window .active, .window .active *:not(.crop, .crop *){
+    z-index: 127;
+}
+.crop .crop-line {
+z-index: 128;
+  position: absolute;
+  transition: all 0.25s;
+}
+.crop .crop-line:hover {
+  border-color: rgba(123,53,132,1);
+}
+.crop .crop-line.vertical {
+  width: 5px;
+}
+.crop .crop-line.horizontal {
+  height: 5px
+}
+.crop .crop-top-line {
+  top: 0;
+  left: 0;
+  right: 0;
+  border-top: 2px solid rgba(204,31,48,0); /* 2px for the "border" size */
+}
+.crop .crop-bottom-line {
+  bottom: 0;
+  left: 0;
+  right: 0;
+  border-bottom: 2px solid rgba(204,31,48,0); /* 2px for the "border" size */
+}
+.crop .crop-left-line {
+  top: 0;
+  left: 0;
+  bottom: 0;
+  border-left: 2px solid rgba(204,31,48,0); /* 2px for the "border" size */
+}
+.crop .crop-right-line {
+  top: 0;
+  right: 0;
+  bottom: 0;
+  border-right: 2px solid rgba(204,31,48,0); /* 2px for the "border" size */
+}
+.crop .crop-corner {
+    z-index: 128;
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  border-radius: 2px;
+  border: 2px solid #808080;
+  background: #FFF;
+  opacity: 0;
+  transition: all 0.25s;
+}
+.crop .crop-top-left-corner {
+  top: -3px;
+  left: -3px;
+}
+.crop .crop-top-right-corner {
+  top: -3px;
+  right: -3px;
+}
+.crop .crop-bottom-left-corner {
+  bottom: -3px;
+  left: -3px;
+}
+.crop .crop-bottom-right-corner {
+  bottom: -3px;
+  right: -3px;
+}
+.crop .crop-corner:hover {
+  opacity: 1;
+}
+</style>

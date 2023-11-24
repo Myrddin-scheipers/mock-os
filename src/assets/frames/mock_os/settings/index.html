@@ -35,6 +35,7 @@
             width: auto;
         }
     </style>
+    <link rel="stylesheet" href="./_styles/inputs.css">
 </head>
 
 <body data-entry="colors">
@@ -60,33 +61,30 @@
             if (this.type == "checkbox") {
                 value = this.checked;
             } else if (this.type == "range") {
-                value = Number(value);
+                value = [Number(this.value), this.min, this.max];
             }
             settings[what][this.dataset.key] = value;
-            console.log(value);
-            console.log(settings);
         }
         function sendchange() {
             let tosend = settings;
-            console.log(tosend);
             tosend = JSON.stringify(tosend);
-            console.log(tosend);
             tosend = JSON.parse(tosend);
-            console.log(tosend);
             window.top.postMessage(tosend, '*');
         }
         window.onmessage = function (message) {
             settings = message.data;
             loadsettings(settings, "colors")
         };
-        function loadsettings(setting, what, name) {
+        function loadsettings(setting, what, name, isrecursive) {
             let settingslist = document.querySelector(".settings");
-            settingslist.innerHTML = "";
+            if (!isrecursive) {
+                settingslist.innerHTML = "";
+            }
             if (!name) {
-                    name = what;
-                    if (name.endsWith("s")) {
-                        name = name.substring(0, name.length - 1);
-                    }
+                name = what;
+                if (name.endsWith("s")) {
+                    name = name.substring(0, name.length - 1);
+                }
             }
             if (what) {
                 setting = setting[what];
@@ -96,41 +94,51 @@
                 let settingselem = document.createElement("input");
                 settingselem.addEventListener("change", savechange);
                 settingselem.setAttribute("data-key", key);
-                settingselem.setAttribute("value", value);
-                if (typeof value == 'object') {
-                    console.log(value);
-                    loadsettings(value, false, key);
+                if (typeof value == 'object' && !Array.isArray(value)) {
+                    loadsettings(value, false, key, true);
+                } else if (Array.isArray(value)) {
+                    if (typeof value[0] == 'number') {
+                        settingselem.setAttribute("type", "range");
+                        settingselem.setAttribute("value", value[0]);
+                        if (value[1] > value[2]) {
+                            settingselem.max = value[1];
+                            settingselem.min = value[2];
+                        } else {
+                            settingselem.min = value[1];
+                            settingselem.max = value[2];
+                        }
+                        showinput(settingselem, label, key, name, settingslist);
+                    }
                 } else {
-
+                    settingselem.setAttribute("value", value);
                     if (typeof value == 'string') {
                         if (value.startsWith("#")) {
                             settingselem.setAttribute("type", "color");
-                        } 
+                        }
                         // else if (ImageExist(value)) {
                         //     settingselem = document.createElement("img")
                         //     settingselem.setAttribute("src", value);
                         // } 
                         else {
-                            console.log(ImageExist(value));
                             settingselem.setAttribute("type", "text");
                         }
                     } else if (typeof value == 'boolean') {
                         settingselem.setAttribute("type", "checkbox");
-                    } else if (typeof value == 'number') {
-                        settingselem.setAttribute("type", "range");
                     }
-                    label.innerHTML = key.replaceAll("_", " ") + " " + name;
-                    label.appendChild(settingselem)
-                    settingslist.appendChild(label);
+                    showinput(settingselem, label, key, name, settingslist);
                 }
             }
         }
+        function showinput(settingselem, label, key, name, settingslist) {
+            label.innerHTML = key.replaceAll("_", " ") + " " + name;
+            label.appendChild(settingselem)
+            settingslist.appendChild(label);
+        }
         document.querySelector(".settingslist").addEventListener("click", function (e) {
-            this.focus();
             if (!e.target.dataset.entry) {
                 return;
             } else {
-                loadsettings(settings, e.target.dataset.entry);
+                loadsettings(settings, e.target.dataset.entry, false);
                 document.body.dataset.entry = e.target.dataset.entry;
             }
         })

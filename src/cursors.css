@@ -1,28 +1,7 @@
-body,
-*,
-iframe, .top_menu .actions *,.top_menu .actions {
-    cursor: url(./assets/cursors/left_ptr.svg), default;
-}
-a, a *, button, button *, .dropdown, .dropdown *, .menu-ico, .menu-ico *, .dock-container ul *{
-    cursor: url(./assets/cursors/grab_point.png), default;
-}
-.top_menu, .top_menu *{
-    cursor: url(./assets/cursors/grab.png), auto;
-}
 .loading, .loading * {
     cursor: url(./assets/cursors/wait_19.svg), auto;
     -webkit-animation: cursor 400ms infinite;
     animation: cursor 400ms infinite;
-}
-.top_menu:active, .top_menu *:active,
-.top_menu:target, .top_menu *:target {
-    cursor: url(./assets/cursors/grab_closed.png), grabbing !important;
-}
-.pointer, .pointer *{
-    cursor: url(./assets/cursors/grab_point.png), default !important;
-}
-.grab, .grab * {
-    cursor: url(./assets/cursors/grab_closed.png), grabbing !important;
 }
 @-webkit-keyframes cursor {
     0% {
@@ -194,4 +173,7 @@ a, a *, button, button *, .dropdown, .dropdown *, .menu-ico, .menu-ico *, .dock-
     100% {
         cursor: url(./assets/cursors/wait_18.svg), auto;
     }
+}
+iframe, .crop {
+    cursor: default;
 }

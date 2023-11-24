@@ -1,12 +1,47 @@
 {
     "0.13": {
-        "bug": ["folders dont allow depth > 2"]
+        "bug": [{
+            "title": "folders dont allow depth > 2",
+            "fixed": false,
+            "intentional": false
+        }]
     },
     "0.14": {
-        "bug": ["some apps dont have working images"]
+        "bug": [{
+            "title": "some apps dont have working images",
+            "fixed": false,
+            "intentional": false
+        }]
     },
     "0.15": {
-        "bug": ["top menu dropdowns dont show above an app"],
-        "intended": []
+        "bug": [{
+            "title": "top menu dropdowns dont show above an app",
+            "fixed": true,
+            "intentional": false
+        }]
+    },
+    "0.16": {
+        "bug": []
+    },
+    "0.17": {
+        "bug": []
+    },
+    "0.18": {
+        "bug": [{
+            "title": "closing an app would not stop camera/mic from recording",
+            "fixed": true,
+            "intentional": false
+        },{
+            "title": "notification was below an app",
+            "fixed": true,
+            "intentional": false
+        },{
+            "title": "video player handle doesnt update",
+            "fixed": true,
+            "intentional": false
+        }]
+    },
+    "0.19": {
+        "bug": []
     }
 }

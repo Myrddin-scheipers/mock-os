@@ -1,7 +1,8 @@
+
 <div class="menu first">
     <ul class="menu-list">
         <li class="menu-item">
-            <button class="menu-button disabled">
+            <button tabindex='-1' class="menu-button disabled">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                     class="bi bi-arrow-counterclockwise" viewBox="0 0 16 16">
                     <path fill-rule="evenodd" d="M8 3a5 5 0 1 1-4.546 2.914.5.5 0 0 0-.908-.417A6 6 0 1 0 8 2v1z" />
@@ -15,7 +16,7 @@
     </ul>
     <ul class="menu-list">
         <li class="menu-item">
-            <button class="menu-button disabled">
+            <button tabindex='-1' class="menu-button disabled">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                     class="bi bi-folder-plus" viewBox="0 0 16 16">
                     <path
@@ -28,7 +29,7 @@
             </button>
         </li>
         <li class="menu-item">
-            <button class="menu-button disabled">
+            <button tabindex='-1' class="menu-button disabled">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                     class="bi bi-file-earmark-plus" viewBox="0 0 16 16">
                     <path
@@ -41,7 +42,7 @@
             </button>
         </li>
         <li class="menu-item">
-            <button class="menu-button disabled">
+            <button tabindex='-1' class="menu-button disabled">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                     class="bi bi-textarea-resize" viewBox="0 0 16 16">
                     <path
@@ -52,7 +53,7 @@
             </button>
         </li>
         <li class="menu-item">
-            <button class="menu-button disabled">
+            <button tabindex='-1' class="menu-button disabled">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                     class="bi bi-sliders2" viewBox="0 0 16 16">
                     <path fill-rule="evenodd"
@@ -65,7 +66,7 @@
     </ul>
     <ul class="menu-list">
         <li class="menu-item">
-            <button class="menu-button">
+            <button tabindex='0' class="menu-button">
                 <svg></svg>
                 <span>Select All</span>
                 <span>CTRL+A</span>
@@ -76,22 +77,21 @@
 <div class="menu context_window">
     <ul class="menu-list">
         <li class="menu-item">
-            <button class="menu-button">
+            <button tabindex='0' onclick="duplicate()" class="menu-button">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                     class="bi bi-arrow-counterclockwise" viewBox="0 0 16 16">
                     <path fill-rule="evenodd" d="M8 3a5 5 0 1 1-4.546 2.914.5.5 0 0 0-.908-.417A6 6 0 1 0 8 2v1z" />
                     <path
                         d="M8 4.466V.534a.25.25 0 0 0-.41-.192L5.23 2.308a.25.25 0 0 0 0 .384l2.36 1.966A.25.25 0 0 0 8 4.466z" />
                 </svg>
-                <span onclick="duplicate()">Duplicate</span>
+                <span>Duplicate</span>
                 <span>SHIFT+D</span>
             </button>
         </li>
     </ul>
     <ul class="menu-list">
         <li class="menu-item">
-            <button onclick='appwindow.fullscreen(document.querySelector(".window.active"))'
-                class="menu-button">
+            <button tabindex='0' onclick='appwindow.fullscreen(document.querySelector(".window.active"))' class="menu-button">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                     class="bi bi-folder-plus" viewBox="0 0 16 16">
                     <path
@@ -104,7 +104,7 @@
             </button>
         </li>
         <li class="menu-item">
-            <button class="menu-button disabled">
+            <button tabindex='-1' class="menu-button disabled">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                     class="bi bi-file-earmark-plus" viewBox="0 0 16 16">
                     <path
@@ -117,7 +117,7 @@
             </button>
         </li>
         <li class="menu-item">
-            <button class="menu-button disabled">
+            <button tabindex='-1' class="menu-button disabled">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                     class="bi bi-textarea-resize" viewBox="0 0 16 16">
                     <path
@@ -128,20 +128,20 @@
             </button>
         </li>
         <li class="menu-item">
-            <button onclick="openapp('settings', false)" class="menu-button">
+            <button tabindex='0' onclick="window.top.openapp('settings', false)" class="menu-button">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                     class="bi bi-sliders2" viewBox="0 0 16 16">
                     <path fill-rule="evenodd"
                         d="M10.5 1a.5.5 0 0 1 .5.5v4a.5.5 0 0 1-1 0V4H1.5a.5.5 0 0 1 0-1H10V1.5a.5.5 0 0 1 .5-.5ZM12 3.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5Zm-6.5 2A.5.5 0 0 1 6 6v1.5h8.5a.5.5 0 0 1 0 1H6V10a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5ZM1 8a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2A.5.5 0 0 1 1 8Zm9.5 2a.5.5 0 0 1 .5.5v4a.5.5 0 0 1-1 0V13H1.5a.5.5 0 0 1 0-1H10v-1.5a.5.5 0 0 1 .5-.5Zm1.5 2.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5Z" />
                 </svg>
                 <span>Settings</span>
-                <span class="disabled">CTRL+V</span>
+                <span class="disabled">CTRL+I</span>
             </button>
         </li>
     </ul>
     <ul class="menu-list">
         <li class="menu-item">
-            <button class="menu-button disabled">
+            <button tabindex='-1' class="menu-button disabled">
                 <svg></svg>
                 <span>Select All</span>
                 <span>CTRL+A</span>
@@ -153,7 +153,7 @@
 <div class="menu context_files">
     <ul class="menu-list">
         <li class="menu-item">
-            <button class="menu-button renamebutton">
+            <button tabindex='0' class="menu-button renamebutton">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                     class="bi bi-arrow-counterclockwise" viewBox="0 0 16 16">
                     <path fill-rule="evenodd" d="M8 3a5 5 0 1 1-4.546 2.914.5.5 0 0 0-.908-.417A6 6 0 1 0 8 2v1z" />
@@ -165,7 +165,7 @@
             </button>
         </li>
         <li class="menu-item">
-            <button class="menu-button disabled">
+            <button tabindex='-1' class="menu-button disabled">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                     class="bi bi-textarea-resize" viewBox="0 0 16 16">
                     <path
@@ -176,7 +176,7 @@
             </button>
         </li>
         <li class="menu-item">
-            <button class="menu-button openwith_btn">
+            <button tabindex='0' class="menu-button openwith_btn">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                     class="bi bi-file-earmark-plus" viewBox="0 0 16 16">
                     <path
@@ -188,22 +188,29 @@
                 <span>CTRL+click</span>
             </button>
         </li>
+        <li class="menu-item">
+            <button tabindex='0' class="menu-button deletebutton">
+                <svg></svg>
+                <span>Remove file</span>
+                <span class="disabled">del</span>
+            </button>
+        </li>
     </ul>
     <ul class="menu-list">
 
         <li class="menu-item">
-            <button class="menu-button">
+            <button tabindex='0' onclick="window.top.openapp('settings', false)" class="menu-button">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                     class="bi bi-sliders2" viewBox="0 0 16 16">
                     <path fill-rule="evenodd"
                         d="M10.5 1a.5.5 0 0 1 .5.5v4a.5.5 0 0 1-1 0V4H1.5a.5.5 0 0 1 0-1H10V1.5a.5.5 0 0 1 .5-.5ZM12 3.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5Zm-6.5 2A.5.5 0 0 1 6 6v1.5h8.5a.5.5 0 0 1 0 1H6V10a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5ZM1 8a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2A.5.5 0 0 1 1 8Zm9.5 2a.5.5 0 0 1 .5.5v4a.5.5 0 0 1-1 0V13H1.5a.5.5 0 0 1 0-1H10v-1.5a.5.5 0 0 1 .5-.5Zm1.5 2.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5Z" />
                 </svg>
                 <span>Settings</span>
-                <span>CTRL+V</span>
+                <span>CTRL+I</span>
             </button>
         </li>
         <li class="menu-item">
-            <button onclick="desktop.showFilepicker()" class="menu-button">
+            <button tabindex='0' onclick="desktop.showFilepicker()" class="menu-button">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                     class="bi bi-arrow-counterclockwise" viewBox="0 0 16 16">
                     <path fill-rule="evenodd" d="M8 3a5 5 0 1 1-4.546 2.914.5.5 0 0 0-.908-.417A6 6 0 1 0 8 2v1z" />
@@ -216,296 +223,5 @@
         </li>
     </ul>
     <ul class="menu-list">
-        <li class="menu-item">
-            <button class="menu-button disabled">
-                <svg></svg>
-                <span>Select All</span>
-                <span>CTRL+A</span>
-            </button>
-        </li>
     </ul>
 </div>
-<script>
-    document.addEventListener("click", hidecontext);
-    function hidecontext() {
-        if (window.frameElement) {
-            window.top.hidecontext();
-            return;
-        }
-        document.querySelector(".menu.first").style.display = "none";
-        document.querySelector(".menu.context_window").style.display = "none";
-        document.querySelector(".menu.context_files").style.display = "none";
-    }
-    document.addEventListener('contextmenu', contextmenu);
-    function contextmenu(event, frameElement) {
-        if (window.frameElement) {
-            window.top.contextmenu(event, window.frameElement);
-            return;
-        }
-        hidecontext();
-
-        document.querySelector(".menu.first").style.display = "none";
-        document.querySelector(".menu.context_window").style.display = "none";
-        document.querySelector(".menu.context_files").style.display = "none";
-        event.preventDefault();
-        let context;
-        if (event.target) {
-            if (event.target.closest(".window") != undefined) {
-                // clicked in the window element
-                context = document.querySelector(".menu.context_window");
-            } else if (event.target.closest(".files") != undefined) {
-                // clicked on home files list
-                if (event.target.closest(".group") != undefined) {
-                    event.target.closest(".group").classList.add("rename");
-                    event.target.closest(".group").classList.add("toopen");
-                }
-                context = document.querySelector(".menu.context_files");
-            } else {
-                context = document.querySelector(".menu.first");
-            }
-        } else {
-            return;
-        }
-        let x = event.pageX;
-        let y = event.pageY;
-        if (frameElement != undefined) {
-            let boundingrect = frameElement.getBoundingClientRect();
-            if (boundingrect) {
-                x += boundingrect["left"];
-                y += boundingrect["top"];
-            }
-        }
-        context.style.position = "absolute";
-        context.style.display = "block";
-        if (document.body.clientHeight < context.childNodes[0].parentNode.clientHeight + event.clientY) {
-            y = y - context.childNodes[0].parentNode.clientHeight;
-        }
-        if (document.body.clientWidth < context.childNodes[0].parentNode.clientWidth + event.clientX) {
-            x = x - context.childNodes[0].parentNode.clientWidth;
-        }
-        context.style.left = `${x}px`;
-        context.style.top = `${y}px`;
-    }
-</script>
-<style>
-    .menu {
-        height: auto;
-        z-index: 148;
-        display: none;
-        position: absolute;
-        flex-direction: column;
-        background-color: var(--color-bg-secondary);
-        border-radius: var(--radius);
-        box-shadow: 0 10px 20px rgba(64, 64, 64, 0.15);
-        top: 10px;
-        left: 10px;
-        width: 208px;
-
-    }
-
-    .menu-list+.menu-list {
-        border-top: 1px solid #ddd;
-    }
-
-    .menu-item {
-        position: relative;
-    }
-
-    .menu-button {
-        font: inherit;
-        color: inherit;
-        outline: none;
-        border: 0;
-        padding: 8px 8px;
-        width: 100%;
-
-        border-radius: var(--radius);
-        display: flex;
-        align-items: center;
-        position: relative;
-        background-color: var(--color-bg-secondary);
-        overflow: hidden;
-    }
-
-    .menu-button:hover {
-        background-color: var(--color-bg-primary-offset);
-    }
-
-    .menu-button:hover+.menu-sub-list {
-        display: flex;
-    }
-
-    .menu-button:hover svg {
-        stroke: var(--color-text-primary);
-    }
-
-    .menu-button:hover svg.fa {
-        color: var(--color-text-primary);
-    }
-
-    .menu-button svg {
-        width: 20px;
-        height: 20px;
-        margin-right: 10px;
-        stroke: var(--color-text-primary-offset);
-        display: none;
-    }
-
-    .menu-button svg.fa {
-        width: 20px;
-        height: 20px;
-        margin-right: 10px;
-        color: var(--color-text-primary-offset);
-    }
-
-
-
-
-
-    .menu.settings {
-        width: 300px;
-    }
-
-    .menu-list {
-        max-width: calc(100% - 20px);
-        margin: 0;
-        display: block;
-        width: 100%;
-        padding: 8px;
-    }
-
-    .menu-list,
-    ul {
-        list-style-type: none;
-    }
-
-    .menu-item {
-        position: relative;
-    }
-
-    .menu-button {
-        font: inherit;
-        color: inherit;
-        outline: none;
-        border: 0;
-        padding: 8px 8px;
-        width: 100%;
-
-        border-radius: var(--radius);
-        display: flex;
-        align-items: center;
-        position: relative;
-        background-color: var(--color-bg-secondary);
-        overflow: hidden;
-    }
-
-    .menu-button:hover {
-        background-color: var(--color-bg-primary-offset);
-    }
-
-    .menu-button:hover+.menu-sub-list {
-        display: flex;
-    }
-
-    .menu-button:hover svg {
-        stroke: var(--color-text-primary);
-    }
-
-    .menu-button:hover svg.fa {
-        color: var(--color-text-primary);
-    }
-
-    .context-button:hover svg.fa {
-        color: var(--color-text-primary);
-    }
-
-    .menu-button svg {
-        width: 20px;
-        height: 20px;
-        margin-right: 10px;
-        stroke: var(--color-text-primary-offset);
-        display: none;
-    }
-
-    .menu-button svg.fa {
-        width: 20px;
-        height: 20px;
-        margin-right: 10px;
-        color: var(--color-text-primary-offset);
-    }
-
-    .context-button svg.fa {
-        height: 30px;
-        margin-right: 10px;
-        color: var(--color-text-primary-offset);
-    }
-
-    .menu-button svg:nth-of-type(2) {
-        margin-right: 0;
-        position: absolute;
-        right: 8px;
-    }
-
-    .menu-button span:nth-of-type(2) {
-        margin-right: 0;
-        position: absolute;
-        right: 8px;
-        font-size: x-small;
-        margin-top: 20px;
-    }
-
-    .menu-button span.second {
-        color: var(--color-text-primary-offset);
-        font-size: small;
-        margin-left: 5px;
-    }
-
-    .menu-button.tor span:nth-of-type(1) {
-        color: var(--color-text-primary-offset);
-        font-size: small;
-        margin-left: 5px;
-    }
-
-    .menu-button--delete:hover {
-        color: var(--color-red);
-    }
-
-    .menu-button--delete:hover svg:first-of-type {
-        stroke: var(--color-red);
-    }
-
-    .menu-button--orange svg:first-of-type {
-        stroke: var(--color-orange);
-        color: var(--color-orange);
-    }
-
-    .menu-button--green svg:first-of-type {
-        stroke: var(--color-green);
-    }
-
-    .menu-button--purple svg:first-of-type {
-        stroke: var(--color-purple);
-    }
-
-    .menu-button--black svg:first-of-type {
-        stroke: var(--color-black);
-    }
-
-    .menu-button--checked svg:nth-of-type(2) {
-        stroke: var(--color-purple);
-    }
-
-    .menu-button span.disabled,
-    .context-button:hover:disabled {
-        color: var(--color-text-primary-offset);
-    }
-
-    .menu-button:hover:disabled,
-    .context-button:hover:disabled {
-        background-color: var(--color-bg-secondary);
-    }
-
-    .context-button p {
-        height: 10px;
-    }
-</style>

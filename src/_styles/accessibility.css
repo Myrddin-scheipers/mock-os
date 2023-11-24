@@ -1,0 +1,8 @@
+.accessibility *:focus {
+    border: 1px solid #fff !important;
+    outline: none !important;
+    box-shadow: none !important;
+    border-radius: 3px !important;
+    color: #000 !important;
+    background-color: rgba(255, 255, 255, 0.3) !important;
+}

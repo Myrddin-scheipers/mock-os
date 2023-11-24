@@ -37,10 +37,10 @@
     $filename = filter_var($filename, FILTER_SANITIZE_URL);
     $file = "../" . $filename;
     $ext = pathinfo($file, PATHINFO_EXTENSION);
-    $file_url = "https://localhost/" . $filename;
+    $file_url = $protocol . "localhost/" . $filename;
     if (checkUrl($file_url) == true) {
     } else {
-        $file_url = "https://mier.helioho.st/" . $filename;
+        $file_url = $protocol . "mier.helioho.st/" . $filename;
     }
     $options = stream_context_create(array(
         "ssl" => array(
@@ -52,7 +52,7 @@
     ?>
     <?php
     if (is_dir($file) || is_array($type)) {
-        header('Location: ../app_loader.html?app=./files.php?path=' . $filename);
+        header('Location: ../app_loader.html?app=./_views/directory.php?path=' . $filename);
         die;
     } else {
         if (str_starts_with($type, "text/") || str_starts_with($type, "application/")) {
@@ -60,7 +60,7 @@
     ?>
             <code>
                 <pre>
-        <?php echo htmlspecialchars(file_get_contents($file)); ?>
+        <?php echo htmlspecialchars(file_get_contents($file_url)); ?>
         </pre>
             </code>
         <?php
@@ -90,18 +90,16 @@
     }
     ?>
     <script defer>
-        this.focus();
         let save = document.querySelector(".save");
         if (save) {
             save.addEventListener("dblclick", async function() {
                 let data = document.querySelector("code").innerText;
-                await fetch('../_php/savefile.php?path=<?php echo $file ?>&data=' + encodeURIComponent(data)).then(response => console.log(response))
+                await fetch('../_php/savefile.php?path=<?php echo $file ?>&data=' + encodeURIComponent(data));
             })
         }
         let opacity = <?php echo $default_opactiy; ?>;
         document.addEventListener("wheel", event => {
             if (event.buttons == 4 || event.buttons == 1) {
-                console.log(event.buttons)
                 if (document.documentElement.style.getPropertyValue("--a") == '') {
                     opacity = <?php echo $default_opactiy; ?>;
                 } else {

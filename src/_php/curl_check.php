@@ -1,4 +1,7 @@
 <?php
+    ini_set('display_errors', 1);
+    ini_set('display_startup_errors', 1);
+    error_reporting(1);
 function checkUrl($url)
 {
     // Simple check
@@ -26,11 +29,14 @@ function checkUrl($url)
         }
         // Should never happen, but if something goofy got here, return false value
     }else{
+        echo "<b>curl does not exist</b>";
         return false;
     }
 }
-$root = "https://localhost";
+require_once($_SERVER['DOCUMENT_ROOT'] . "/_php/protocol.php");
+$root = $protocol . $_SERVER["SERVER_NAME"] . "/";
 if (checkUrl($root . "/prod_check.php") == TRUE) {
 } else {
-    $root = "https://mier.helioho.st";
+    echo "<b>error: files not found</b>";
+    die;
 }

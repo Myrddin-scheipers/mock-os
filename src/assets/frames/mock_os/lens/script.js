@@ -97,7 +97,6 @@ async function allowperms() {
       log('Warning! The "hangup" media session action is not supported.');
     }
   } catch (error) {
-    console.table(error);
     if(error.name == "NotAllowedError"){
       ui_warn("camera or microphone error", "Camera or micro " + error.message.toLowerCase());
     }else {

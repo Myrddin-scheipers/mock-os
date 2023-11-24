@@ -20,11 +20,10 @@
   let sourcetoopen = params.get("app");
   if (sourcetoopen) {
     setTimeout(() => {
-      console.log(window.location.search);
       window.location.href = "" + window.location.search.replace("?app=", "");
     }, 200)
   }else{
-    window.location.href = "https://"+ window.location.hostname + "/assets/frames/no_app.html";
+    window.location.href = window.location.protocol + window.location.hostname + "/assets/frames/no_app.html";
   }
 </script>
 <style>

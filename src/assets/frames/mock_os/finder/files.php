@@ -9,6 +9,6 @@
 </head>
 
 <body>
-    <?php require_once("../../../files.php")?>
+    <?php require_once("../../../_views/directory.php")?>
 </body>
 </html>

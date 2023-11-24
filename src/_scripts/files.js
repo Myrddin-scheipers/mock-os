@@ -1,5 +1,11 @@
 let dblclicktime = 800;
-window.addEventListener("load", this.focus());
+// window.addEventListener("load", this.focus());
+function select(file){
+  if(file.closest(".group")){
+      file.closest(".group").classList.add("active");
+      document.querySelector(".dropdown.file *[data-action='rename']").classList.remove("disabled");
+    }
+  }
 function replaceTag(target, changeto) {
   let that = target;
 
@@ -17,7 +23,7 @@ function replaceTag(target, changeto) {
     }
   }
   that.parentNode.replaceChild(newtag, that);
-
+  newtag.focus();
 }
 
 function renamefile(e, target) {
@@ -39,8 +45,8 @@ function renamefile(e, target) {
   if (e.type == "contextmenu") {
 
   } else {
-    if (file.classList.contains("selected") || e == document.querySelector(".renamebutton")) {
-      file.classList.remove("selected");
+    if (file.classList.contains("active") || e == document.querySelector(".renamebutton")) {
+      file.classList.remove("active");
       let filenameelem;
       let input = file.querySelector("input");
       if (input == undefined) {
@@ -50,11 +56,11 @@ function renamefile(e, target) {
         return;
       }
     } else {
-      let selection = document.querySelectorAll(".selected");
+      let selection = document.querySelectorAll(".active");
       selection.forEach(selected => {
-        selected.classList.remove("selected");
+        selected.classList.remove("active");
       });
-      file.classList.add("selected");
+      file.classList.add("active");
     }
   }
 }
@@ -77,8 +83,9 @@ function singleclick(e) {
   doubletapTimer = null;
   renamefile(e, e.target);
 }
-let applist = document.querySelector(".openwith")
+let applist = document.querySelector(".openwith");
 function resetfiles() {
+  let files = document.querySelector(".files")
   while(document.querySelector(".dropdown input:checked")){
     document.querySelector(".dropdown input:checked").checked = false;
   }
@@ -88,17 +95,17 @@ function resetfiles() {
   while (document.querySelector(".rename")) {
     document.querySelector(".rename").classList.remove("rename");
   }
-  while (document.querySelector(".selected")) {
-    document.querySelector(".selected").classList.remove("selected");
+  while (files.querySelector(".active")) {
+    files.querySelector(".active").classList.remove("active");
   }
   while (document.querySelector('.context')) {
     document.querySelector('.context').classList.remove("context");
   }
   applist.style.display = "none"
   applist.innerHTML = "";
-  element = document.querySelector(".toopen");
+  element = document.querySelector(".action");
   if (element) {
-    element.classList.remove("toopen");
+    element.classList.remove("action");
   }
 }
 
@@ -118,13 +125,13 @@ function tap(e) {
     //clicked on an input (when renaming)
     return;
   }
-  if (!e.target.closest(".group").classList.contains("selected")) {
+  if (!e.target.closest(".group").classList.contains("active")) {
     // when your files are not selected already (click on diffrent file)
     resetfiles();
   }
   if (doubletapTimer == null) {
     // clicked more then 1 sec ago on a file or not clicked at all
-    if (document.querySelector(".files .selected") != e.target.closest(".group")) {
+    if (document.querySelector(".files .active") != e.target.closest(".group")) {
       // First tap, we wait X ms to the second tap
       doubletapTimer = setTimeout(function () {
         // idk what this does 
@@ -159,10 +166,10 @@ function openfile(e, app) {
   if (app == false) {
     specialopen = true;
   }
-  if (document.querySelector(".toopen")) {
+  if (document.querySelector(".action")) {
     // opened with "open with" button
-    element = document.querySelector(".toopen");
-    element.classList.remove("toopen");
+    element = document.querySelector(".action");
+    element.classList.remove("action");
     specialopen = true;
   }
   eclass = element.classList;
@@ -184,8 +191,8 @@ function openfile(e, app) {
     if (ext.includes("/")) {
       ext = "directory";
     }
-    if (localStorage.getItem("ext_" + ext) && specialopen == false) {
-      openfile(element, localStorage.getItem("ext_" + ext));
+    if (window.top.localStorage.getItem("ext_" + ext) && specialopen == false) {
+      openfile(element, window.top.localStorage.getItem("ext_" + ext));
     } else {
       // no default usage app or special open
       get_openwith(element, data.path);
@@ -208,33 +215,38 @@ function openfile(e, app) {
     window.top.ui_warn("missing function", "no function named openapp");
   }
 }
+function deletefile(e, target){
+  console.log(target, e);
+  if(target.closest(".group")){
+    target.closest(".group").remove();
+
+  }
+}
 window.addEventListener("load", function () {
   if (document.querySelector(".renamebutton")) {
     document.querySelector(".renamebutton").addEventListener("click", function (e) {
       renamefile(this, document.querySelector('.rename'));
     })
   }
+  if (document.querySelector(".deletebutton")) {
+    document.querySelector(".deletebutton").addEventListener("click", function (e) {
+      deletefile(this, document.querySelector('.action'));
+    })
+  }
   if (document.querySelector(".openwith_btn")) {
     let openwith_btn = document.querySelector(".openwith_btn");
     let where;
-    // if (openwith_btn.classList.contains("frame")) {
-    //   whatframe = document.querySelector(".window.active");
-    //   if (whatframe) {
-    //     whatframe = whatframe.querySelector("iframe");
-    //     where = whatframe.contentWindow.document.querySelector('.toopen');
-    //   } else {
-    //     where = document.querySelector('.toopen');
-    //   }
-    // } else {
-    // }
     openwith_btn.addEventListener("click", function (e) {
-      where = document.querySelector('.toopen');
+      where = document.querySelector('.action');
       openfile(where, false);
     })
   }
 });
-async function get_openwith(elem, path) {
-  elem.classList.add("toopen");
+async function get_openwith(elem, path, thewindow) {
+  if(this.frameElement){
+    window.top.get_openwith(elem, path, this.window);
+  }
+  elem.classList.add("action");
   let apps = [];
   let ext = path.split('.').pop();
   if (ext.includes("/")) {
@@ -242,7 +254,7 @@ async function get_openwith(elem, path) {
     ext = "directory";
   }
   //file & folder
-  await fetch("https://" + window.location.host + '/assets/frames/frames.php?ext=' + ext)
+  await fetch(window.location.protocol + "//" + window.location.host + '/assets/frames/frames.php?ext=' + ext)
     .then(response => response.json().then(data => ({ status: response.status, body: data })))
     .then(json => {
       if (json.status == 200) {
@@ -251,18 +263,25 @@ async function get_openwith(elem, path) {
         ui_warn("serious issue");
       }
     });
-  showopenwith(apps, ext);
+  window.top.showopenwith(apps, ext, thewindow);
   return;
 }
 
-function showopenwith(apps, ext) {
+function showopenwith(apps, ext, thewindow) {
+  if(this.window == window.top){
+    thewindow = this.window;
+  }else{
+    thewindow = window.top;
+  }
   applist.style.display = "block";
   applist.innerHTML = "";
+  let i = 0;
   apps.forEach(app => {
     let app_to_use = document.createElement("div");
     let text = document.createTextNode(`open with ${app.title}`);
     app_to_use.appendChild(text);
     app_to_use.setAttribute("data-app", app.name)
+    app_to_use.setAttribute("tabindex", "0");
     applist.appendChild(app_to_use);
   });
   let alwaysbtn = document.createElement("div");
@@ -270,12 +289,15 @@ function showopenwith(apps, ext) {
   alwaysbtn.appendChild(alwaystxt);
   alwaysbtn.classList.add("always")
   alwaysbtn.style.display = "none";
+  alwaysbtn.setAttribute("tabindex", "0")
   applist.appendChild(alwaysbtn);
+  applist.firstElementChild.focus();
   alwaysbtn.addEventListener("click", function (e) {
     alwaysbtn.classList.remove("use");
     if (applist.querySelector(".use")) {
-      localStorage.setItem("ext_" + ext, applist.querySelector(".use").dataset.app);
-      openfile(e, applist.querySelector(".use").dataset.app);
+      thewindow.openfile(e, applist.querySelector(".use").dataset.app);
+      window.top.localStorage.setItem("ext_" + ext, applist.querySelector(".use").dataset.app);
+      applist.style.display == "none";
     }
   });
 }
@@ -305,67 +327,72 @@ applist.addEventListener("dblclick", function (e) {
 function filecountchange(e) {
   value = e.value;
   value = Math.abs(value) / 10;
-  document.querySelector(':root').style.setProperty('--file-columns', value);
-  settings.files.size = value;
+  deviceSettings.set({"files": {"size": [value,15,5],}})
+}
+let items = document.querySelectorAll('.files .group');
+let dragSrcEl = null;
+function handleDragStart(e) {
+  resetfiles();
+  this.style.opacity = '0.4';
+  
+  dragSrcEl = this;
+  e.dataTransfer.effectAllowed = 'move';
+  e.dataTransfer.setData('text/html', this.innerHTML);
 }
 
-
-document.addEventListener('DOMContentLoaded', (event) => {
-  let dragSrcEl = null;
-  
-  function handleDragStart(e) {
-    resetfiles();
-    this.style.opacity = '0.4';
-    
-    dragSrcEl = this;
-    e.dataTransfer.effectAllowed = 'move';
-    e.dataTransfer.setData('text/html', this.innerHTML);
+function handleDragOver(e) {
+  if (e.preventDefault) {
+    e.preventDefault();
   }
+  e.dataTransfer.dropEffect = 'move';
+  return false;
+}
 
-  function handleDragOver(e) {
-    if (e.preventDefault) {
-      e.preventDefault();
-    }
-    e.dataTransfer.dropEffect = 'move';
-    
-    return false;
+function handleDragEnter(e) {
+  e.preventDefault();
+  if(!dragSrcEl){
+    return;
   }
-
-  function handleDragEnter(e) {
+  if (dragSrcEl.closest(".group") != this.closest(".group")) {
+    select(this);
+  }
+  if(this.closest(".group")){
     if (dragSrcEl.closest(".group") != this.closest(".group")) {
-      this.closest(".group").classList.add('selected');
+      select(this);
     }
   }
+}
 
-  function handleDragLeave(e) {
-    if(e.target != this.closest(".group")){
-      resetfiles();
-    }
+function handleDragLeave(e) {
+  if(e.target != this.closest(".group")){
+    resetfiles();
   }
+}
 
-  function handleDrop(e) {
-    if (e.stopPropagation) {
-      e.stopPropagation(); // stops the browser from redirecting.
-    }
-    
+function handleDrop(e) {
+  console.log(this);
+  if (e.stopPropagation) {
+    e.stopPropagation(); // stops the browser from redirecting.
+  }
+  if(this.closest(".group")){
     if (dragSrcEl.closest(".group") != this.closest(".group")) {
       dragSrcEl.innerHTML = this.closest(".group").innerHTML;
       this.closest(".group").innerHTML = e.dataTransfer.getData('text/html');
     }
-    return false;
+  }else if(this.closest("#bin")){
+    dragSrcEl.remove();
   }
+  return false;
+}
 
-  function handleDragEnd(e) {
-    this.style.opacity = '1';
-    
-    items.forEach(function (item) {
-      item.classList.remove('over');
-    });
-  }
-  
-  
-  let items = document.querySelectorAll('.files .group');
-  items.forEach(function(item) {
+function handleDragEnd(e) {
+  this.style.opacity = '1';
+  items.forEach(function (item) {
+    item.classList.remove('over');
+  });
+}
+document.addEventListener('DOMContentLoaded', async function(event){  
+    items.forEach(function(item) {
     item.addEventListener('dragstart', handleDragStart, true);
     item.addEventListener('dragover', handleDragOver, true);
     item.addEventListener('dragleave', handleDragLeave, true);
@@ -373,4 +400,34 @@ document.addEventListener('DOMContentLoaded', (event) => {
     item.addEventListener('drop', handleDrop, true);
     item.addEventListener('dragend', handleDragEnd, true);
   });
+  let applist = document.querySelector(".dock-container ul");
+  let liitem = document.createElement("li");
+  let liname = document.createElement("div");
+  liitem.addEventListener("click", function(e){
+    e.preventDefault();
+  })
+  await loadInstalledApps();
+  showbin();
 });
+function showbin(){
+  let applist = document.querySelector(".dock-container ul");
+  let liitem = document.createElement("li");
+  let liname = document.createElement("div");
+  let liimg = document.createElement("img");
+  liname.setAttribute("class", "name");
+  liname.appendChild(document.createTextNode("bin"));
+  liimg.setAttribute("data-window", false);
+  liimg.setAttribute("data-id", false);
+  liimg.setAttribute("class", "ico");
+  liitem.setAttribute("id", "bin");
+  liimg.setAttribute("src", `${window.location.protocol + "//" + window.location.host}/assets/images/binary.png`);
+  liitem.appendChild(liname);
+  liitem.appendChild(liimg);
+  applist.appendChild(liitem);
+  liitem.addEventListener('dragstart', handleDragStart, true);
+  liitem.addEventListener('dragover', handleDragOver, true);
+  liitem.addEventListener('dragleave', handleDragLeave, true);
+  liitem.addEventListener('dragenter', handleDragEnter, true);
+  liitem.addEventListener('drop', handleDrop, true);
+  liitem.addEventListener('dragend', handleDragEnd, true);
+}

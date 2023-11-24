@@ -1,15 +1,19 @@
 Z-index importance
 - error screen 152
 - loader 150
+- cursor 149
 - context menu 148
 - important warnings/info 145
+- notifications 144
 - user generated warnings/info 140
 - applist bar hover 134
 - fullscreen app 132
 - applist bar 130
+- buttons of app (close, resize, ...) 129
+- resize handle 128
 - active app 127
 - other apps 125
 - ui bars 120
 - inputs 100
-
+- resize handle back 10
 - background -1

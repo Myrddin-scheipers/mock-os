@@ -34,6 +34,22 @@
         "fix": ["some z-index issues", "lowered the area to hover to show the bottom menu", "moved the bottom menu fully to the bottom", "fixed some security issues", "not working context menu items will appear darker"],
         "added": ["added settings under the 'system' menu", "added custom accent colors", "added background from external sources in settings", "force quit functionality added", "moving an app will make it half transparent & will show an overlay in case it will change position & resize"],
         "removed": ["removed some unused css"],
-        "todo": ["give settings app a good layout", "closing an app should remove the name in the top menu"]
+        "todo": ["give settings app a better layout", "closing an app should remove the name in the top menu"]
+    },
+    "0.18": {
+        "fix": ["selecting a diffrent app also changes then name in the top bar now", "resizing will not force another resize when in certain area's", "closing an app removes the name in the top menu", "app buttons zindex", "resizing an app will not bug out when resizing too fast"],
+        "todo": ["give settings app a better layout", "make orange minimize button work", "crapp store"]
+    },
+    "0.19": {
+        "fix": ["bin not doing anything is now fixed", "folders no longer show errors", "closing an app changes the name in the top menu", "order of html to improve accessibility", "fixed a bug with the crappstore where sometimes the images would prevent some apps from showing"],
+        "added": ["cursor assets & code", "accessibility with tabbing", "closing an app would not stop camera/mic from recording, fixed now", "notification was below an app, fixed now", "developers guide at /developers", "custom folder icon"],
+        "removed": ["BUGS BUGS BUGS a lot removed :D"],
+        "todo": ["give settings app a better layout",  "make orange minimize button work", "make it possible to enable custom cursor in settings", "make crapp store image for settings & apps with no image should not be able to be installed & show 'unavailable'", "make system info app", "make uninstallable apps, like crapp store"]
+    },
+    "0.20": {
+        "fix": ["instability with the window naming in the top menu"],
+        "added": ["better error handling", "share button"],
+        "removed": [""],
+        "todo": ["give settings app a better layout",  "make orange minimize button work", "make it possible to enable custom cursor in settings", "make crapp store image for settings & apps with no image should not be able to be installed & show 'unavailable'", "make system info app", "make uninstallable apps, like crapp store & settings"]
     }
 }

@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   version="1.1"
+   id="svg2"
+   width="341.33334"
+   height="341.33334"
+   viewBox="0 0 341.33334 341.33334"
+   sodipodi:docname="sir.ai"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs6">
+    <linearGradient
+       x1="0"
+       y1="0"
+       x2="1"
+       y2="0"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(0,255.5,255.5,0,127.75,0.5)"
+       spreadMethod="pad"
+       id="linearGradient28">
+      <stop
+         style="stop-opacity:1;stop-color:#ca2a8e"
+         offset="0"
+         id="stop22" />
+      <stop
+         style="stop-opacity:1;stop-color:#ca2a8e"
+         offset="0.00000014"
+         id="stop24" />
+      <stop
+         style="stop-opacity:1;stop-color:#2d5fa9"
+         offset="1"
+         id="stop26" />
+    </linearGradient>
+    <linearGradient
+       x1="0"
+       y1="0"
+       x2="1"
+       y2="0"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(0,225,-225,0,127.5,8.212121)"
+       spreadMethod="pad"
+       id="linearGradient52">
+      <stop
+         style="stop-opacity:1;stop-color:#ca2a8e"
+         offset="0"
+         id="stop44" />
+      <stop
+         style="stop-opacity:1;stop-color:#ca2a8e"
+         offset="0.67349328"
+         id="stop46" />
+      <stop
+         style="stop-opacity:1;stop-color:#2d5fa9"
+         offset="0.842828"
+         id="stop48" />
+      <stop
+         style="stop-opacity:1;stop-color:#2d5fa9"
+         offset="1"
+         id="stop50" />
+    </linearGradient>
+  </defs>
+  <sodipodi:namedview
+     id="namedview4"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1" />
+  <g
+     id="g8"
+     inkscape:groupmode="layer"
+     inkscape:label="sir"
+     transform="matrix(1.3333333,0,0,-1.3333333,0,341.33333)">
+    <g
+       id="g10">
+      <g
+         id="g12">
+        <g
+           id="g18">
+          <g
+             id="g20">
+            <path
+               d="M 127.75,256 C 57.196,256 0,198.805 0,128.25 v 0 C 0,57.695 57.196,0.5 127.75,0.5 v 0 c 70.554,0 127.75,57.195 127.75,127.75 v 0 C 255.5,198.805 198.304,256 127.75,256 Z"
+               style="fill:url(#linearGradient28);stroke:none"
+               id="path30" />
+          </g>
+        </g>
+      </g>
+    </g>
+    <g
+       id="g32">
+      <g
+         id="g34">
+        <g
+           id="g40">
+          <g
+             id="g42">
+            <path
+               d="m 62,218 c -5.282,-22.208 9.089,-47.533 34.782,-55.664 v 0 C 111.698,144.393 110.523,134.447 109,130 v 0 c 16.708,-10.184 22.966,-38.177 18.441,-66.877 v 0 C 137.882,89.323 160.498,104.272 177,101 v 0 c 0.02,-0.004 0.038,-0.008 0.058,-0.012 v 0 c -0.004,0.011 -0.007,0.021 -0.011,0.032 v 0 C 146.444,116.945 132.097,128.272 134,135 v 0 c -14.35,1.144 -25.684,40.145 -34,117 v 0 C 81.078,248.37 66.027,234.932 62,218 m 135,-16 c -16.933,-2.105 -31.989,-18.643 -38.901,-39.664 v 0 c -4.507,-9.625 -8.813,-16.712 -12.916,-21.258 v 0 C 162.236,144.157 198.507,141.797 254,134 v 0 c -0.233,41.263 -28.981,68.235 -53.151,68.235 v 0 c -1.298,0 -2.582,-0.078 -3.849,-0.235 M 1,113 c 12.46,-1.815 24.195,-2.948 35.021,-3.427 v 0 C 27.026,100.781 18.728,89.625 12,76 v 0 c 21.945,8.34 43.89,16.679 65.835,25.02 v 0 c 0.568,3.668 0.694,7.287 0.429,10.792 v 0 c 16.773,3.18 27.707,9.339 30.736,18.188 v 0 c -9.276,5.654 -22.716,6.396 -37.134,1.84 v 0 C 67.511,138.925 61.262,144.348 54,147 v 0 c -3.561,1.3 -7.345,1.927 -11.195,1.927 v 0 C 24.934,148.927 5.672,135.412 1,113 m 133,22 c 3.544,-0.282 7.271,1.743 11.183,6.078 v 0 C 138.536,139.878 134.807,137.852 134,135 M 203,27 c 13.42,37.159 -5.809,69.94 -25.942,73.988 v 0 C 185.705,76.325 194.352,51.663 203,27"
+               style="fill:url(#linearGradient52);stroke:none"
+               id="path54" />
+          </g>
+        </g>
+      </g>
+    </g>
+  </g>
+</svg>
